@@ -101,15 +101,15 @@
             transform: translateY(-2px);
         }
 
-        /* Slide Transitions & Viewport Fit */
+        /* Slide Transitions: Cinematic Depth Shift & Directional Parallax (Apple / Linear Keynote Style) */
         .slide {
             position: absolute;
             inset: 0;
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transition: opacity 0.25s ease, transform 0.25s ease;
-            transform: scale(0.99);
+            transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translate3d(60px, 0, 0) scale(0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -119,13 +119,28 @@
             height: 100vh;
             width: 100vw;
             box-sizing: border-box;
+            will-change: transform, opacity;
+        }
+
+        .slide.slide-prev {
+            transform: translate3d(-60px, 0, 0) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .slide.slide-next {
+            transform: translate3d(60px, 0, 0) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
 
         .slide.active {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
-            transform: scale(1);
+            transform: translate3d(0, 0, 0) scale(1);
             z-index: 10;
         }
 
@@ -652,34 +667,34 @@ ightarrow$ 1)</div>
         <section class="slide" id="slide-13">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase">AUTOPSY 03 // INFRASTRUCTURE OVERKILL</span>
+                    <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase">AUTOPSY 03 // PREMATURE SCALE</span>
                     <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
-                        Case Study: Webvan
+                        Case Study: TinyOwl
                     </h2>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-4xl mx-auto mb-5">
                     <div class="glass-card p-4 text-center">
-                        <div class="font-mono text-xs text-outline mb-1">VC CAPITAL RAISED</div>
-                        <div class="font-mono text-2xl font-bold text-primary">$800M+</div>
-                        <div class="font-sans text-[11px] text-outline mt-1">Early online grocery pioneer</div>
+                        <div class="font-mono text-xs text-outline mb-1">RAPID EXPANSION</div>
+                        <div class="font-mono text-2xl font-bold text-primary">11 Cities</div>
+                        <div class="font-sans text-[11px] text-outline mt-1">Food delivery launched 2014</div>
                     </div>
                     <div class="glass-card p-4 text-center">
-                        <div class="font-mono text-xs text-outline mb-1">COMMITTED CAPEX</div>
-                        <div class="font-mono text-2xl font-bold text-error">$1 Billion</div>
-                        <div class="font-sans text-[11px] text-outline mt-1">26 automated robotic hubs</div>
+                        <div class="font-mono text-xs text-outline mb-1">WORKFORCE CUTS</div>
+                        <div class="font-mono text-2xl font-bold text-error">~600 Staff</div>
+                        <div class="font-sans text-[11px] text-outline mt-1">2015–16 mass layoffs</div>
                     </div>
                     <div class="glass-card p-4 text-center">
-                        <div class="font-mono text-xs text-outline mb-1">LIFESPAN</div>
-                        <div class="font-mono text-2xl font-bold text-error">24 Months</div>
-                        <div class="font-sans text-[11px] text-outline mt-1">Dot-com era bankruptcy</div>
+                        <div class="font-mono text-xs text-outline mb-1">FINAL OUTCOME</div>
+                        <div class="font-mono text-2xl font-bold text-tertiary">Runnr Merger</div>
+                        <div class="font-sans text-[11px] text-outline mt-1">Merged with RoadRunnr (2016)</div>
                     </div>
                 </div>
 
                 <div class="glass-card p-5 max-w-4xl mx-auto border-l-4 border-l-tertiary">
                     <div class="font-mono text-xs text-tertiary font-bold mb-1">CORE FORENSIC VERDICT</div>
                     <p class="font-sans text-xs sm:text-sm text-white leading-relaxed">
-                        Webvan built automated infrastructure for millions of orders before consumer adoption existed. Premature expansion converted a viable idea into rapid bankruptcy.
+                        TinyOwl aggressively expanded across 11 cities before proving unit economics and operational stability. Over-hiring and heavy cash burn forced widespread shutdowns and a distressed merger. <strong>“Don’t scale what you haven’t solved.”</strong>
                     </p>
                 </div>
             </div>
@@ -838,13 +853,13 @@ ightarrow$ 1)</div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-4xl mx-auto mb-5">
                     <div class="glass-card p-4 text-center">
                         <div class="font-mono text-xs text-outline mb-1">PEAK VALUATION</div>
-                        <div class="font-mono text-2xl font-bold text-primary">$22 Billion</div>
-                        <div class="font-sans text-[11px] text-outline mt-1">India's edtech giant</div>
+                        <div class="font-mono text-2xl font-bold text-primary">₹1.75 Lakh Cr</div>
+                        <div class="font-sans text-[11px] text-outline mt-1">Peak valuation ($22B)</div>
                     </div>
                     <div class="glass-card p-4 text-center">
                         <div class="font-mono text-xs text-outline mb-1">ANNUAL LOSS (FY22)</div>
-                        <div class="font-mono text-2xl font-bold text-error">Rs. 82.45B</div>
-                        <div class="font-sans text-[11px] text-outline mt-1">Aggressive acquisition burn</div>
+                        <div class="font-mono text-2xl font-bold text-error">₹8,245 Crore</div>
+                        <div class="font-sans text-[11px] text-outline mt-1">FY22 audit loss (Rs. 82.45B)</div>
                     </div>
                     <div class="glass-card p-4 text-center">
                         <div class="font-mono text-xs text-outline mb-1">AUDIT FILING DELAY</div>
@@ -1032,7 +1047,7 @@ ightarrow$ 1)</div>
             <button onclick="goToSlide(10)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="11: Case Study: WeWork"></button>
             <button onclick="goToSlide(11)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="12: Scaling Too Early"></button>
             <button onclick="goToSlide(12)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="13: 4 Traps of Premature Scale"></button>
-            <button onclick="goToSlide(13)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="14: Case Study: Webvan"></button>
+            <button onclick="goToSlide(13)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="14: Premature Scaling // TinyOwl"></button>
             <button onclick="goToSlide(14)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="15: Ineffective Marketing"></button>
             <button onclick="goToSlide(15)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="16: 4 Marketing Hazards"></button>
             <button onclick="goToSlide(16)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="17: Case Study: Quibi"></button>
@@ -1068,7 +1083,7 @@ ightarrow$ 1)</div>
             "11 // CASE STUDY: WEWORK",
             "12 // SCALING TOO EARLY",
             "13 // 4 TRAPS OF PREMATURE SCALE",
-            "14 // CASE STUDY: WEBVAN",
+            "14 // PREMATURE SCALING // TINYOWL",
             "15 // INEFFECTIVE MARKETING",
             "16 // 4 MARKETING HAZARDS",
             "17 // CASE STUDY: QUIBI",
@@ -1186,9 +1201,13 @@ ightarrow$ 1)</div>
         function updateSlideUI() {
             const slides = document.querySelectorAll('.slide');
             slides.forEach((slide, index) => {
-                slide.classList.remove('active');
+                slide.classList.remove('active', 'slide-prev', 'slide-next');
                 if (index === currentSlide) {
                     slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('slide-prev');
+                } else {
+                    slide.classList.add('slide-next');
                 }
             });
 
@@ -1257,7 +1276,7 @@ ightarrow$ 1)</div>
             if (e.repeat) return;
 
             const now = Date.now();
-            if (now - lastNavTime < 180) return;
+            if (now - lastNavTime < 260) return;
 
             // Right Arrow, Down Arrow, Spacebar, Enter, PageDown -> Next Slide
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter' || e.key === 'PageDown') {
