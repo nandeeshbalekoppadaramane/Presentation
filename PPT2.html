@@ -101,6 +101,84 @@
             transform: translateY(-2px);
         }
 
+        
+        /* ========================================================================= */
+        /* LIGHT THEME STYLING                                                       */
+        /* ========================================================================= */
+        html.light body {
+            background-color: #f6f8fb !important;
+            color: #1e293b !important;
+        }
+
+        html.light .dot-grid {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px) !important;
+            opacity: 0.7 !important;
+        }
+
+        html.light .scanlines {
+            opacity: 0.08 !important;
+        }
+
+        html.light header,
+        html.light footer {
+            background-color: rgba(255, 255, 255, 0.85) !important;
+            border-color: rgba(0, 0, 0, 0.1) !important;
+        }
+
+        html.light .glass-card {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-color: rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        html.light .glass-card-hover:hover {
+            background: #ffffff !important;
+            border-color: rgba(0, 0, 0, 0.2) !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        html.light .text-white {
+            color: #0f172a !important;
+        }
+
+        html.light .text-outline,
+        html.light .text-on-surface-variant {
+            color: #475569 !important;
+        }
+
+        html.light .bg-white\/5 {
+            background-color: rgba(0, 0, 0, 0.04) !important;
+        }
+
+        html.light .border-white\/5,
+        html.light .border-white\/10 {
+            border-color: rgba(0, 0, 0, 0.08) !important;
+        }
+
+        html.light .bg-black\/40 {
+            background-color: rgba(0, 0, 0, 0.03) !important;
+        }
+
+        html.light .text-primary {
+            color: #0284c7 !important;
+        }
+
+        html.light .text-tertiary {
+            color: #16a34a !important;
+        }
+
+        html.light .text-error {
+            color: #dc2626 !important;
+        }
+
+        html.light .slide-dot.bg-white {
+            background-color: #0f172a !important;
+        }
+
+        html.light .slide-dot.bg-white\/20 {
+            background-color: rgba(0, 0, 0, 0.18) !important;
+        }
+
         /* Slide Transitions: Cinematic Depth Shift & Directional Parallax (Apple / Linear Keynote Style) */
         .slide {
             position: absolute;
@@ -170,13 +248,16 @@
         <div class="flex items-center gap-2.5">
             <div class="w-2.5 h-2.5 rounded-full bg-tertiary animate-pulse shadow-[0_0_10px_rgba(74,225,118,0.7)] shrink-0"></div>
             <div class="px-3 py-1 glass-card flex items-center gap-2">
-                <span id="header-slide-badge" class="font-mono text-tertiary text-xs sm:text-sm font-bold tracking-wider shrink-0">SCENE 01 / 23</span>
+                <span id="header-slide-badge" class="font-mono text-tertiary text-xs sm:text-sm font-bold tracking-wider shrink-0">SCENE 01 / 22</span>
                 <span class="text-white/20">|</span>
                 <span id="header-slide-name" class="font-mono text-white text-xs sm:text-sm font-medium truncate max-w-[220px] sm:max-w-[480px] md:max-w-[700px]">BOOT SEQUENCE & TEAM</span>
             </div>
         </div>
 
         <div class="flex items-center gap-2">
+            <button id="btn-theme" onclick="toggleTheme()" class="p-1.5 glass-card hover:bg-white/10 text-outline hover:text-white transition-all" title="Toggle Theme (Key: T or D)">
+                <span class="material-symbols-outlined text-[18px]" id="theme-icon">light_mode</span>
+            </button>
             <button id="btn-audio" onclick="toggleAudio()" class="p-1.5 glass-card hover:bg-white/10 text-outline hover:text-tertiary transition-all" title="Toggle Audio (Key: M)">
                 <span class="material-symbols-outlined text-[18px]" id="audio-icon">volume_up</span>
             </button>
@@ -195,7 +276,7 @@
             <div class="slide-content text-center items-center py-4">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-tertiary/30 bg-tertiary/10 text-tertiary font-mono text-xs mb-4 shadow-[0_0_15px_rgba(74,225,118,0.2)]">
                     <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
-                    <span>TEAM WATCH DOGS // FORENSIC ANALYSIS</span>
+                    <span>TEAM WATCH DOGS</span>
                 </div>
                 
                 <h1 class="font-display font-bold text-2xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight max-w-4xl mb-4">
@@ -206,12 +287,12 @@
                 </h1>
 
                 <p class="font-mono text-xs sm:text-sm text-outline max-w-2xl mb-8">
-                    An investigation into economic breakdown, premature scale, market disconnect, and governance failure.
+                    A comprehensive study of economic breakdown, premature scale, market disconnect, and governance failure.
                 </p>
 
                 <!-- Team Grid -->
                 <div class="w-full max-w-3xl glass-card p-5 mb-4">
-                    <div class="text-[10px] font-mono text-primary font-bold uppercase tracking-wider mb-3">Investigation Roster</div>
+                    <div class="text-[10px] font-mono text-primary font-bold uppercase tracking-wider mb-3">Team Members</div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
                         <div class="p-2.5 rounded bg-white/5 border border-white/5 font-mono text-xs text-white font-semibold">Nandeesh</div>
                         <div class="p-2.5 rounded bg-white/5 border border-white/5 font-mono text-xs text-white font-semibold">Gaurav</div>
@@ -224,162 +305,127 @@
             </div>
         </section>
 
-        <section class="slide" id="slide-1">
-            <div class="slide-content text-center items-center py-4">
-                <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase mb-3">FOUNDATIONAL DEFINITION</span>
-                <h2 class="font-display text-3xl sm:text-5xl font-bold text-white tracking-tight mb-6">
-                    What is a <span class="text-tertiary">Startup</span>?
-                </h2>
-
-                <div class="glass-card p-6 sm:p-8 max-w-3xl border-l-4 border-l-tertiary text-left mb-6">
-                    <p class="font-sans text-lg sm:text-xl text-white font-medium leading-relaxed">
-                        “A temporary organization designed to search for a <strong class="text-tertiary font-bold">repeatable and scalable business model</strong> under conditions of extreme uncertainty.”
-                    </p>
-                    <div class="mt-4 pt-3 border-t border-white/10 font-mono text-xs text-outline">— Steve Blank</div>
+                <section class="slide" id="slide-1">
+            <div class="slide-content py-4 max-w-4xl mx-auto flex flex-col justify-center">
+                <div class="text-center mb-6">
+                    <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase mb-1">FOUNDATIONAL DEFINITION</span>
+                    <h2 class="font-display text-3xl sm:text-5xl font-bold text-white tracking-tight mt-1">
+                        What is a <span class="text-tertiary">startup</span>?
+                    </h2>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full max-w-3xl text-left">
-                    <div class="glass-card p-4">
-                        <div class="font-mono text-xs text-primary font-bold mb-1">01 // INNOVATION</div>
-                        <div class="font-sans text-xs text-on-surface-variant">Solves problems in novel ways rather than copying established templates.</div>
+                <!-- 4 Core Pillars Bento Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto w-full">
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-tertiary">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-tertiary text-xl">bolt</span>
+                            <h3 class="font-sans text-base font-bold text-white">1. Young, fast-growing company</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Extreme organizational agility and velocity, built to adapt rapidly before capital is depleted.
+                        </p>
                     </div>
-                    <div class="glass-card p-4">
-                        <div class="font-mono text-xs text-primary font-bold mb-1">02 // SCALE</div>
-                        <div class="font-sans text-xs text-on-surface-variant">Engineered to grow revenue exponentially faster than headcount or capex.</div>
+
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-primary">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-primary text-xl">verified</span>
+                            <h3 class="font-sans text-base font-bold text-white">2. To find a sustainable solution</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Discovering a repeatable business model that systematically solves a genuine customer pain point.
+                        </p>
                     </div>
-                    <div class="glass-card p-4">
-                        <div class="font-mono text-xs text-primary font-bold mb-1">03 // UNCERTAINTY</div>
-                        <div class="font-sans text-xs text-on-surface-variant">Operates without proven demand until Product-Market Fit is validated.</div>
+
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-primary">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-primary text-xl">speed</span>
+                            <h3 class="font-sans text-base font-bold text-white">3. To scale up rapidly</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            High operational leverage where revenue and user adoption multiply without linear additions of cost.
+                        </p>
+                    </div>
+
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-tertiary">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-tertiary text-xl">trending_up</span>
+                            <h3 class="font-sans text-base font-bold text-white">4. Designed to chase exponential growth</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Targeting massive total addressable markets engineered to capture category leadership and non-linear scale.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="slide" id="slide-2">
-            <div class="slide-content py-4">
-                <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">ANATOMY OF A VENTURE</span>
+                <section class="slide" id="slide-2">
+            <div class="slide-content py-4 max-w-4xl mx-auto flex flex-col justify-center">
+                <!-- Header -->
+                <div class="text-center mb-5">
+                    <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase mb-1">COMPARATIVE ANALYSIS</span>
                     <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
-                        The 4 Core Pillars of a Startup
+                        How does a startup differ from a <span class="text-primary">normal business</span>?
                     </h2>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-tertiary">
+                <!-- Core Definition Banner -->
+                <div class="glass-card p-4 sm:p-5 border-l-4 border-l-primary mb-4">
+                    <p class="font-sans text-xs sm:text-sm text-white leading-relaxed font-medium">
+                        A <strong class="text-primary">startup</strong> is built to either create a new market or disrupt an existing one through innovation, while a <strong class="text-outline">normal business</strong> enters an existing market with known market demand.
+                    </p>
+                </div>
+
+                <!-- Split 2-Column Bento Comparison -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Normal Business -->
+                    <div class="glass-card glass-card-hover p-4 border-t-2 border-t-outline">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="material-symbols-outlined text-tertiary text-xl">speed</span>
-                            <h3 class="font-sans text-base font-bold text-white">1. Young & Fast</h3>
+                            <span class="material-symbols-outlined text-outline text-lg">storefront</span>
+                            <h3 class="font-sans text-sm font-bold text-white uppercase">Normal Business (1 → N)</h3>
                         </div>
-                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
-                            Extreme organizational agility and short feedback loops. Adapts rapidly before capital runs dry.
-                        </p>
+                        <ul class="space-y-2 font-sans text-xs text-on-surface-variant">
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-outline text-xs mt-0.5">check_circle</span>
+                                <span><strong>Market:</strong> Enters existing markets with proven, validated demand.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-outline text-xs mt-0.5">check_circle</span>
+                                <span><strong>Growth:</strong> Linear growth bounded by local geography and hours.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-outline text-xs mt-0.5">check_circle</span>
+                                <span><strong>Finances:</strong> Focuses on immediate day-one profitability and cash flow.</span>
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-primary">
+                    <!-- Tech Startup -->
+                    <div class="glass-card glass-card-hover p-4 border-t-2 border-t-primary">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="material-symbols-outlined text-primary text-xl">task_alt</span>
-                            <h3 class="font-sans text-base font-bold text-white">2. Sustainable Solution</h3>
+                            <span class="material-symbols-outlined text-primary text-lg">rocket_launch</span>
+                            <h3 class="font-sans text-sm font-bold text-white uppercase">Tech Startup (0 → 1)</h3>
                         </div>
-                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
-                            Solves a genuine, high-friction pain point that customers are willing to pay for continuously.
-                        </p>
-                    </div>
-
-                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-primary">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="material-symbols-outlined text-primary text-xl">trending_up</span>
-                            <h3 class="font-sans text-base font-bold text-white">3. Rapid Scale</h3>
-                        </div>
-                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
-                            High operational leverage where software and systems allow massive output expansion at low marginal cost.
-                        </p>
-                    </div>
-
-                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-tertiary">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="material-symbols-outlined text-tertiary text-xl">public</span>
-                            <h3 class="font-sans text-base font-bold text-white">4. Exponential Growth</h3>
-                        </div>
-                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
-                            Targets massive total addressable markets (TAM) capable of compounding venture-scale returns.
-                        </p>
+                        <ul class="space-y-2 font-sans text-xs text-on-surface-variant">
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-primary text-xs mt-0.5">rocket_launch</span>
+                                <span><strong>Market:</strong> Disrupts legacy industries or creates entirely new categories.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-primary text-xs mt-0.5">rocket_launch</span>
+                                <span><strong>Growth:</strong> Exponential scale powered by tech leverage and network effects.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="material-symbols-outlined text-primary text-xs mt-0.5">rocket_launch</span>
+                                <span><strong>Finances:</strong> Trades initial profitability for rapid category dominance.</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="slide" id="slide-3">
-            <div class="slide-content text-center items-center py-4">
-                <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase mb-3">COMPARATIVE ANALYSIS</span>
-                <h2 class="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight max-w-3xl mb-6">
-                    How does a startup differ from a <span class="text-primary">normal business</span>?
-                </h2>
-
-                <div class="glass-card p-6 sm:p-8 max-w-3xl text-left border-l-4 border-l-primary">
-                    <p class="font-sans text-base sm:text-lg text-white leading-relaxed mb-4">
-                        A traditional business executes a <strong class="text-primary font-semibold">known business model</strong> in an established market with existing demand.
-                    </p>
-                    <p class="font-sans text-base sm:text-lg text-white leading-relaxed">
-                        A startup is designed to <strong class="text-tertiary font-semibold">search for an unknown model</strong>, invent new markets, and capture non-linear scale.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="slide" id="slide-4">
-            <div class="slide-content py-4">
-                <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">STRUCTURAL DIVERGENCE</span>
-                    <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
-                        Startup vs. Normal Business
-                    </h2>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-                    <!-- Normal Business -->
-                    <div class="glass-card p-5 border-t-2 border-t-outline">
-                        <div class="font-mono text-xs text-outline font-bold uppercase mb-3">Traditional Business (1 $
-ightarrow$ N)</div>
-                        <ul class="space-y-3 font-sans text-xs text-on-surface-variant">
-                            <li class="flex items-start gap-2">
-                                <span class="material-symbols-outlined text-outline text-sm mt-0.5">check_circle</span>
-                                <span><strong>Market:</strong> Serves known demand with proven products (e.g. bakery, consultancy).</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="material-symbols-outlined text-outline text-sm mt-0.5">check_circle</span>
-                                <span><strong>Growth:</strong> Linear growth bounded by local geography and hours.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="material-symbols-outlined text-outline text-sm mt-0.5">check_circle</span>
-                                <span><strong>Finances:</strong> Focuses on immediate day-one profitability and positive cash flow.</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Startup -->
-                    <div class="glass-card p-5 border-t-2 border-t-primary">
-                        <div class="font-mono text-xs text-primary font-bold uppercase mb-3">Tech Startup (0 $
-ightarrow$ 1)</div>
-                        <ul class="space-y-3 font-sans text-xs text-on-surface-variant">
-                            <li class="flex items-start gap-2">
-                                <span class="material-symbols-outlined text-primary text-sm mt-0.5">rocket_launch</span>
-                                <span><strong>Market:</strong> Disrupts industries or creates entirely new categories.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="material-symbols-outlined text-primary text-sm mt-0.5">rocket_launch</span>
-                                <span><strong>Growth:</strong> Exponential scale powered by tech leverage and network effects.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="material-symbols-outlined text-primary text-sm mt-0.5">rocket_launch</span>
-                                <span><strong>Finances:</strong> Trades short-term profitability for rapid market capture.</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="slide" id="slide-5">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">FATAL PATTERN 01</span>
@@ -417,7 +463,7 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-6">
+        <section class="slide" id="slide-4">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">FINANCIAL BREAKDOWN</span>
@@ -450,10 +496,10 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-7">
+        <section class="slide" id="slide-5">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">AUTOPSY 01 // SUBSIDY COLLAPSE</span>
+                    <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">CASE STUDY // SUBSIDY COLLAPSE</span>
                     <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
                         Case Study: MoviePass
                     </h2>
@@ -478,7 +524,7 @@ ightarrow$ 1)</div>
                 </div>
 
                 <div class="glass-card p-5 max-w-4xl mx-auto border-l-4 border-l-error">
-                    <div class="font-mono text-xs text-error font-bold mb-1">CORE FORENSIC VERDICT</div>
+                    <div class="font-mono text-xs text-error font-bold mb-1">KEY TAKEAWAY</div>
                     <p class="font-sans text-xs sm:text-sm text-white leading-relaxed">
                         MoviePass achieved explosive user demand, but every new subscriber increased net losses. Scale magnified the broken unit economics instead of fixing them.
                     </p>
@@ -486,7 +532,7 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-8">
+        <section class="slide" id="slide-6">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">FATAL PATTERN 02</span>
@@ -524,35 +570,153 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-9">
+        <section class="slide" id="slide-7">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">CAPITAL STRUCTURE RISK</span>
                     <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
-                        4 Structural Capital Traps
+                        Structural Capital Traps
                     </h2>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-error">
-                        <h3 class="font-sans text-sm font-bold text-white mb-1">1. Overdependence on Investors</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">Relying continuously on external VC funding rounds. Becomes fatal when venture markets tighten.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+                    <div class="glass-card glass-card-hover p-5 border-l-4 border-l-error">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-error text-xl">account_balance</span>
+                            <h3 class="font-sans text-base font-bold text-white">1. Crushing Debt Obligations</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Taking on heavy debt with fixed repayment terms before revenue and cash flow become predictable.
+                        </p>
                     </div>
 
-                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-error">
-                        <h3 class="font-sans text-sm font-bold text-white mb-1">2. Crushing Debt Obligations</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">Taking on heavy debt with fixed repayment terms before revenue is predictable.</p>
+                    <div class="glass-card glass-card-hover p-5 border-l-4 border-l-error">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-error text-xl">query_stats</span>
+                            <h3 class="font-sans text-base font-bold text-white">2. Weak Financial Controls</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Poor budgeting, absence of cash auditing, and lack of real-time visibility into burn rate and unit margins.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+                <!-- Slide 9: Dunzo Case Study (Part 1: Positive Growth) -->
+        <section class="slide" id="slide-8">
+            <div class="slide-content py-4">
+                <div class="text-center mb-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-2">
+                        <svg class="w-4 h-4 text-[#00D290]" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                        <span class="font-display font-bold text-xs text-[#00D290] tracking-wide">dunzo</span>
+                        <span class="text-white/20 text-xs">|</span>
+                        <span class="font-mono text-[10px] text-tertiary font-bold tracking-widest uppercase">POSITIVE GROWTH</span>
+                    </div>
+                    <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight">
+                        Case Study: Dunzo
+                    </h2>
+                    <p class="font-mono text-xs text-outline mt-1">The Rise: Building India's Hyperlocal Delivery Pioneer</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-4">
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-tertiary text-left">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-tertiary text-xl">forum</span>
+                            <h3 class="font-sans text-sm font-bold text-white">1. Consistent Growth with User Feedback</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Started as a WhatsApp group in Bengaluru and scaled virally by iterating relentlessly on user delivery requests and high customer satisfaction.
+                        </p>
                     </div>
 
-                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-error">
-                        <h3 class="font-sans text-sm font-bold text-white mb-1">3. Weak Financial Controls</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">Poor budgeting, absence of cash auditing, and lack of real-time visibility into burn rate.</p>
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-tertiary text-left">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-tertiary text-xl">handshake</span>
+                            <h3 class="font-sans text-sm font-bold text-white">2. Investment of Google & Reliance</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Attracted Google's first direct Indian startup investment, followed by a ₹1,500 Cr ($200M) backing from Reliance Retail for a 25.8% stake.
+                        </p>
                     </div>
 
-                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-error">
-                        <h3 class="font-sans text-sm font-bold text-white mb-1">4. Misallocation of Capital</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">Pouring capital into non-revenue vanity projects instead of core product endurance.</p>
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-tertiary text-left">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-tertiary text-xl">verified</span>
+                            <h3 class="font-sans text-sm font-bold text-white">3. Maintain Quality on Scaling</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Delivered anything, anywhere within 30 minutes while maintaining high fulfillment rates and beloved brand loyalty across major metros.
+                        </p>
                     </div>
+                </div>
+
+                <div class="glass-card p-4 max-w-4xl mx-auto border-l-4 border-l-tertiary text-left">
+                    <div class="font-mono text-xs text-tertiary font-bold mb-0.5">MILESTONE ACHIEVEMENT</div>
+                    <p class="font-sans text-xs sm:text-sm text-white leading-relaxed">
+                        At its peak, Dunzo reached a valuation of ₹6,000 Crore (~$775M), handling millions of monthly orders as the category leader in hyperlocal delivery.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Dunzo Case Study (Part 2: Why It Failed) -->
+        <section class="slide" id="slide-9">
+            <div class="slide-content py-4">
+                <div class="text-center mb-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 mb-2">
+                        <svg class="w-4 h-4 text-error" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                        <span class="font-display font-bold text-xs text-error tracking-wide">dunzo</span>
+                        <span class="text-white/20 text-xs">|</span>
+                        <span class="font-mono text-[10px] text-error font-bold tracking-widest uppercase">FAILURE ANALYSIS</span>
+                    </div>
+                    <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight">
+                        Why Did Dunzo Fail?
+                    </h2>
+                    <p class="font-mono text-xs text-outline mt-1">Fatal financial imbalances and competitive squeeze</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-4">
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-error text-left">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-error text-xl">trending_down</span>
+                            <h3 class="font-sans text-sm font-bold text-white">1. Misjudged Cash Outflows</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            The pivot to 19-minute dark-store grocery (Dunzo Daily) caused monthly cash burn to cross ₹100+ Crore with negative contribution margins per order.
+                        </p>
+                    </div>
+
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-error text-left">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-error text-xl">savings</span>
+                            <h3 class="font-sans text-sm font-bold text-white">2. Heavy Reliance on External Investors</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Depended entirely on frequent venture capital infusions to fund daily operations. When global VC markets tightened, runway evaporated quickly.
+                        </p>
+                    </div>
+
+                    <div class="glass-card glass-card-hover p-5 border-t-2 border-t-error text-left">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="material-symbols-outlined text-error text-xl">swords</span>
+                            <h3 class="font-sans text-sm font-bold text-white">3. Intense Market Competition</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant leading-relaxed">
+                            Deep-pocketed competitors like Blinkit (Zomato), Zepto, and Swiggy Instamart outspent Dunzo in dark-store density, discounts, and marketing.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 max-w-4xl mx-auto border-l-4 border-l-error text-left">
+                    <div class="font-mono text-xs text-error font-bold mb-0.5">KEY TAKEAWAY</div>
+                    <p class="font-sans text-xs sm:text-sm text-white leading-relaxed">
+                        High consumer love and exponential order volume cannot compensate for unsustainable cash burn, heavy external funding dependency, and fierce competition.
+                    </p>
                 </div>
             </div>
         </section>
@@ -560,35 +724,45 @@ ightarrow$ 1)</div>
         <section class="slide" id="slide-10">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">AUTOPSY 02 // ASSET-LIABILITY MISMATCH</span>
+                    <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">FATAL PATTERN 03</span>
                     <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
-                        Case Study: WeWork
+                        Scaling Too Early
                     </h2>
+                    <p class="font-mono text-xs text-outline mt-1">Expanding operations before proving that the underlying business works.</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-4xl mx-auto mb-5">
-                    <div class="glass-card p-4 text-center">
-                        <div class="font-mono text-xs text-outline mb-1">PEAK VALUATION</div>
-                        <div class="font-mono text-2xl font-bold text-primary">$47 Billion</div>
-                        <div class="font-sans text-[11px] text-outline mt-1">Massive global occupancy</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
+                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-primary">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-primary text-base">crisis_alert</span>
+                            <h3 class="font-sans text-sm font-bold text-white">1. Expansion Before Product-Market Fit (PMF)</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant">Pushing heavy growth and marketing before proving that customers truly want the product and keep using it.</p>
                     </div>
-                    <div class="glass-card p-4 text-center">
-                        <div class="font-mono text-xs text-outline mb-1">FIXED COMMITMENTS</div>
-                        <div class="font-mono text-2xl font-bold text-error">$47 Billion</div>
-                        <div class="font-sans text-[11px] text-outline mt-1">Long-term lease liabilities</div>
-                    </div>
-                    <div class="glass-card p-4 text-center">
-                        <div class="font-mono text-xs text-outline mb-1">REVENUE EXPOSURE</div>
-                        <div class="font-mono text-2xl font-bold text-error">$3.4 Billion</div>
-                        <div class="font-sans text-[11px] text-outline mt-1">Short-term month-to-month rent</div>
-                    </div>
-                </div>
 
-                <div class="glass-card p-5 max-w-4xl mx-auto border-l-4 border-l-error">
-                    <div class="font-mono text-xs text-error font-bold mb-1">CORE FORENSIC VERDICT</div>
-                    <p class="font-sans text-xs sm:text-sm text-white leading-relaxed">
-                        WeWork had real customer demand and revenue, but its balance sheet had a fatal mismatch: 15-year fixed lease liabilities paired with flexible, short-term user contracts.
-                    </p>
+                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-primary">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-primary text-base">public</span>
+                            <h3 class="font-sans text-sm font-bold text-white">2. Multi-Market Expansion</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant">Launching in new cities before making the business model stable and profitable in the first market.</p>
+                    </div>
+
+                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-primary">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-primary text-base">group_add</span>
+                            <h3 class="font-sans text-sm font-bold text-white">3. Aggressive Over-Hiring</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant">Building a massive organizational workforce and payroll before recurring revenue justifies it.</p>
+                    </div>
+
+                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-primary">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-primary text-base">warehouse</span>
+                            <h3 class="font-sans text-sm font-bold text-white">4. Heavy Infrastructure Capex</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant">Committing heavy capital to warehouses, equipment, and offices ahead of actual transaction demand.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -596,36 +770,36 @@ ightarrow$ 1)</div>
         <section class="slide" id="slide-11">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">FATAL PATTERN 03</span>
+                    <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">FATAL PATTERN 03 (CONTD.)</span>
                     <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
                         Scaling Too Early
                     </h2>
-                    <p class="font-mono text-xs text-outline mt-1">Expanding aggressively before proving that the core business actually works.</p>
+                    <p class="font-mono text-xs text-outline mt-1">Systemic friction and breakdown when scale outpaces operational maturity.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
-                    <div class="glass-card p-5 border-t-2 border-t-primary">
-                        <div class="font-mono text-xs text-primary font-bold mb-2">01 // PREMATURE SCALE</div>
-                        <h3 class="font-sans text-sm font-bold text-white mb-2">Expansion Before PMF</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">
-                            Pouring fuel onto an unvalidated product. Scaling customer acquisition before achieving retention.
-                        </p>
+                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-primary">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-primary text-base">hub</span>
+                            <h3 class="font-sans text-sm font-bold text-white">5. Operational Complexity</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant">Multiplying locations and employees creates paralyzing coordination overhead and slower execution.</p>
                     </div>
 
-                    <div class="glass-card p-5 border-t-2 border-t-primary">
-                        <div class="font-mono text-xs text-primary font-bold mb-2">02 // GEOGRAPHIC SPREAD</div>
-                        <h3 class="font-sans text-sm font-bold text-white mb-2">Premature Rollouts</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">
-                            Entering multiple cities or countries before dominating and stabilizing the original core market.
-                        </p>
+                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-primary">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-primary text-base">broken_image</span>
+                            <h3 class="font-sans text-sm font-bold text-white">6. Quality Deterioration</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant">Rapid hypergrowth dilutes core product excellence, delivery reliability, and customer service quality.</p>
                     </div>
 
-                    <div class="glass-card p-5 border-t-2 border-t-primary">
-                        <div class="font-mono text-xs text-primary font-bold mb-2">03 // HEADCOUNT BLOAT</div>
-                        <h3 class="font-sans text-sm font-bold text-white mb-2">Over-Hiring</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">
-                            Building a massive organizational workforce before recurring revenue justifies the fixed monthly payroll.
-                        </p>
+                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-primary">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-primary text-base">content_copy</span>
+                            <h3 class="font-sans text-sm font-bold text-white">7. Failure to Replicate</h3>
+                        </div>
+                        <p class="font-sans text-xs text-on-surface-variant">Falsely assuming what succeeded in an initial early market will automatically work in new markets.</p>
                     </div>
                 </div>
             </div>
@@ -634,40 +808,7 @@ ightarrow$ 1)</div>
         <section class="slide" id="slide-12">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">SYSTEMIC FRICTION</span>
-                    <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
-                        4 Traps of Premature Scale
-                    </h2>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-error">
-                        <h3 class="font-sans text-sm font-bold text-white mb-1">1. Heavy Infrastructure Capex</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">Building massive warehouses, custom technology, and equipment before customer demand materializes.</p>
-                    </div>
-
-                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-error">
-                        <h3 class="font-sans text-sm font-bold text-white mb-1">2. Operational Complexity</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">Managing hundreds of new employees and locations creates paralyzing coordination overhead.</p>
-                    </div>
-
-                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-error">
-                        <h3 class="font-sans text-sm font-bold text-white mb-1">3. Quality Deterioration</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">Rapid hypergrowth compromises customer service, reliability, and product excellence.</p>
-                    </div>
-
-                    <div class="glass-card glass-card-hover p-4 border-l-4 border-l-error">
-                        <h3 class="font-sans text-sm font-bold text-white mb-1">4. Failure to Replicate</h3>
-                        <p class="font-sans text-xs text-on-surface-variant">Falsely assuming what succeeded in one local market will automatically work in new markets.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="slide" id="slide-13">
-            <div class="slide-content py-4">
-                <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase">AUTOPSY 03 // PREMATURE SCALE</span>
+                    <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase">CASE STUDY // PREMATURE SCALE</span>
                     <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
                         Case Study: TinyOwl
                     </h2>
@@ -692,7 +833,7 @@ ightarrow$ 1)</div>
                 </div>
 
                 <div class="glass-card p-5 max-w-4xl mx-auto border-l-4 border-l-tertiary">
-                    <div class="font-mono text-xs text-tertiary font-bold mb-1">CORE FORENSIC VERDICT</div>
+                    <div class="font-mono text-xs text-tertiary font-bold mb-1">KEY TAKEAWAY</div>
                     <p class="font-sans text-xs sm:text-sm text-white leading-relaxed">
                         TinyOwl aggressively expanded across 11 cities before proving unit economics and operational stability. Over-hiring and heavy cash burn forced widespread shutdowns and a distressed merger. <strong>“Don’t scale what you haven’t solved.”</strong>
                     </p>
@@ -700,7 +841,7 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-14">
+        <section class="slide" id="slide-13">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">FATAL PATTERN 04</span>
@@ -738,7 +879,7 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-15">
+        <section class="slide" id="slide-14">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">DISTRIBUTION PITFALLS</span>
@@ -771,10 +912,10 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-16">
+        <section class="slide" id="slide-15">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase">AUTOPSY 04 // VALUE PROPOSITION VOID</span>
+                    <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase">CASE STUDY // VALUE PROPOSITION VOID</span>
                     <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
                         Case Study: Quibi
                     </h2>
@@ -799,7 +940,7 @@ ightarrow$ 1)</div>
                 </div>
 
                 <div class="glass-card p-5 max-w-4xl mx-auto border-l-4 border-l-tertiary">
-                    <div class="font-mono text-xs text-tertiary font-bold mb-1">CORE FORENSIC VERDICT</div>
+                    <div class="font-mono text-xs text-tertiary font-bold mb-1">KEY TAKEAWAY</div>
                     <p class="font-sans text-xs sm:text-sm text-white leading-relaxed">
                         Quibi had billions in capital and stellar production, but fundamentally misunderstood user behavior. Consumers wouldn't pay a monthly subscription for mobile clips when YouTube and TikTok were free.
                     </p>
@@ -807,7 +948,7 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-17">
+        <section class="slide" id="slide-16">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">FATAL PATTERN 05</span>
@@ -841,10 +982,10 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-18">
+        <section class="slide" id="slide-17">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
-                    <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">AUTOPSY 05 // GOVERNANCE COLLAPSE</span>
+                    <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">CASE STUDY // GOVERNANCE COLLAPSE</span>
                     <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight mt-1">
                         Case Study: BYJU'S
                     </h2>
@@ -869,7 +1010,7 @@ ightarrow$ 1)</div>
                 </div>
 
                 <div class="glass-card p-5 max-w-4xl mx-auto border-l-4 border-l-error">
-                    <div class="font-mono text-xs text-error font-bold mb-1">CORE FORENSIC VERDICT</div>
+                    <div class="font-mono text-xs text-error font-bold mb-1">KEY TAKEAWAY</div>
                     <p class="font-sans text-xs sm:text-sm text-white leading-relaxed">
                         Hypergrowth without rigorous internal controls and timely reporting triggered auditor departures, debt disputes, and governance collapse.
                     </p>
@@ -877,7 +1018,7 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-19">
+        <section class="slide" id="slide-18">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase">DEFENSIVE BLUEPRINT</span>
@@ -922,7 +1063,7 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-20">
+        <section class="slide" id="slide-19">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">EXECUTIVE SUMMARY // PART 1</span>
@@ -955,7 +1096,7 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-21">
+        <section class="slide" id="slide-20">
             <div class="slide-content py-4">
                 <div class="text-center mb-6">
                     <span class="font-mono text-xs text-error font-bold tracking-widest uppercase">EXECUTIVE SUMMARY // PART 2</span>
@@ -988,7 +1129,7 @@ ightarrow$ 1)</div>
             </div>
         </section>
 
-        <section class="slide" id="slide-22">
+        <section class="slide" id="slide-21">
             <div class="slide-content text-center items-center py-4">
                 <span class="font-mono text-xs text-tertiary font-bold tracking-widest uppercase mb-2">SYNTHESIS & VERDICT</span>
                 <h2 class="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">
@@ -1032,31 +1173,30 @@ ightarrow$ 1)</div>
     <!-- BOTTOM DOCKED BAR (23 SCENES - PROGRESS PILLS ONLY)                       -->
     <!-- ========================================================================= -->
     <footer class="fixed bottom-0 left-0 w-full z-50 bg-black/70 backdrop-blur-xl border-t border-white/10 px-4 sm:px-8 h-[54px] flex items-center justify-center">
-        <!-- Slide Indicator Pills / Dots (23 Scenes) -->
+                                <!-- Slide Indicator Pills / Dots (22 Scenes) -->
         <div class="flex items-center justify-center gap-1 sm:gap-1.5 overflow-x-auto max-w-[90vw] py-2">
             <button onclick="goToSlide(0)" class="slide-dot w-6 sm:w-7 h-1.5 rounded-full bg-white transition-all shrink-0 cursor-pointer" title="01: Boot Sequence & Team"></button>
             <button onclick="goToSlide(1)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="02: What is a Startup?"></button>
-            <button onclick="goToSlide(2)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="03: The 4 Core Pillars"></button>
-            <button onclick="goToSlide(3)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="04: How Does a Startup Differ?"></button>
-            <button onclick="goToSlide(4)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="05: Startup vs. Normal Business"></button>
-            <button onclick="goToSlide(5)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="06: Unsustainable Business Model"></button>
-            <button onclick="goToSlide(6)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="07: The 4 Economic Traps"></button>
-            <button onclick="goToSlide(7)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="08: Case Study: MoviePass"></button>
-            <button onclick="goToSlide(8)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="09: Financial Failures"></button>
-            <button onclick="goToSlide(9)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="10: 4 Structural Capital Traps"></button>
-            <button onclick="goToSlide(10)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="11: Case Study: WeWork"></button>
-            <button onclick="goToSlide(11)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="12: Scaling Too Early"></button>
-            <button onclick="goToSlide(12)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="13: 4 Traps of Premature Scale"></button>
-            <button onclick="goToSlide(13)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="14: Premature Scaling // TinyOwl"></button>
-            <button onclick="goToSlide(14)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="15: Ineffective Marketing"></button>
-            <button onclick="goToSlide(15)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="16: 4 Marketing Hazards"></button>
-            <button onclick="goToSlide(16)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="17: Case Study: Quibi"></button>
-            <button onclick="goToSlide(17)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="18: Legal & Regulatory Failures"></button>
-            <button onclick="goToSlide(18)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="19: Case Study: BYJU'S"></button>
-            <button onclick="goToSlide(19)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="20: Solutions & Governance"></button>
-            <button onclick="goToSlide(20)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="21: Failure Factors (Part 1)"></button>
-            <button onclick="goToSlide(21)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="22: Failure Factors (Part 2)"></button>
-            <button onclick="goToSlide(22)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="23: Conclusion"></button>
+            <button onclick="goToSlide(2)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="03: Startup vs. Normal Business"></button>
+            <button onclick="goToSlide(3)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="04: Unsustainable Business Model"></button>
+            <button onclick="goToSlide(4)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="05: The 4 Economic Traps"></button>
+            <button onclick="goToSlide(5)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="06: Case Study: MoviePass"></button>
+            <button onclick="goToSlide(6)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="07: Financial Failures"></button>
+            <button onclick="goToSlide(7)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="08: Structural Capital Traps"></button>
+            <button onclick="goToSlide(8)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="09: Case Study: Dunzo (Positive Growth)"></button>
+            <button onclick="goToSlide(9)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="10: Case Study: Dunzo (Why It Failed)"></button>
+            <button onclick="goToSlide(10)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="11: Scaling Too Early (Part 1)"></button>
+            <button onclick="goToSlide(11)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="12: Scaling Too Early (Part 2)"></button>
+            <button onclick="goToSlide(12)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="13: Premature Scaling // TinyOwl"></button>
+            <button onclick="goToSlide(13)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="14: Ineffective Marketing"></button>
+            <button onclick="goToSlide(14)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="15: 4 Marketing Hazards"></button>
+            <button onclick="goToSlide(15)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="16: Case Study: Quibi"></button>
+            <button onclick="goToSlide(16)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="17: Legal & Regulatory Failures"></button>
+            <button onclick="goToSlide(17)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="18: Case Study: BYJU'S"></button>
+            <button onclick="goToSlide(18)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="19: Solutions & Governance"></button>
+            <button onclick="goToSlide(19)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="20: Failure Factors (Part 1)"></button>
+            <button onclick="goToSlide(20)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="21: Failure Factors (Part 2)"></button>
+            <button onclick="goToSlide(21)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all shrink-0 cursor-pointer" title="22: Conclusion"></button>
         </div>
     </footer>
 
@@ -1064,35 +1204,34 @@ ightarrow$ 1)</div>
     <!-- CORE JAVASCRIPT LOGIC & AUDIO SYNTH                                       -->
     <!-- ========================================================================= -->
     <script>
-        // State Management
+                                // State Management
         let currentSlide = 0;
-        const totalSlides = 23;
+        const totalSlides = 22;
         let audioEnabled = true;
 
         const slideTitles = [
             "01 // BOOT SEQUENCE & TEAM",
             "02 // WHAT IS A STARTUP?",
-            "03 // THE 4 CORE PILLARS",
-            "04 // HOW DOES A STARTUP DIFFER?",
-            "05 // STARTUP VS. NORMAL BUSINESS",
-            "06 // UNSUSTAINABLE BUSINESS MODEL",
-            "07 // THE 4 ECONOMIC TRAPS",
-            "08 // CASE STUDY: MOVIEPASS",
-            "09 // FINANCIAL FAILURES",
-            "10 // 4 STRUCTURAL CAPITAL TRAPS",
-            "11 // CASE STUDY: WEWORK",
-            "12 // SCALING TOO EARLY",
-            "13 // 4 TRAPS OF PREMATURE SCALE",
-            "14 // PREMATURE SCALING // TINYOWL",
-            "15 // INEFFECTIVE MARKETING",
-            "16 // 4 MARKETING HAZARDS",
-            "17 // CASE STUDY: QUIBI",
-            "18 // LEGAL & REGULATORY FAILURES",
-            "19 // CASE STUDY: BYJU'S",
-            "20 // SOLUTIONS & GOVERNANCE",
-            "21 // CRITICAL FAILURE FACTORS (PART 1)",
-            "22 // CRITICAL FAILURE FACTORS (PART 2)",
-            "23 // CONCLUSION & THE FINAL VERDICT"
+            "03 // STARTUP VS. NORMAL BUSINESS",
+            "04 // UNSUSTAINABLE BUSINESS MODEL",
+            "05 // THE 4 ECONOMIC TRAPS",
+            "06 // CASE STUDY: MOVIEPASS",
+            "07 // FINANCIAL FAILURES",
+            "08 // STRUCTURAL CAPITAL TRAPS",
+            "09 // CASE STUDY: DUNZO (GROWTH)",
+            "10 // CASE STUDY: DUNZO (WHY IT FAILED)",
+            "11 // SCALING TOO EARLY (PART 1)",
+            "12 // SCALING TOO EARLY (PART 2)",
+            "13 // PREMATURE SCALING // TINYOWL",
+            "14 // INEFFECTIVE MARKETING",
+            "15 // 4 MARKETING HAZARDS",
+            "16 // CASE STUDY: QUIBI",
+            "17 // LEGAL & REGULATORY FAILURES",
+            "18 // CASE STUDY: BYJU'S",
+            "19 // SOLUTIONS & GOVERNANCE",
+            "20 // CRITICAL FAILURE FACTORS (PART 1)",
+            "21 // CRITICAL FAILURE FACTORS (PART 2)",
+            "22 // CONCLUSION & THE FINAL VERDICT"
         ];
 
         // -------------------------------------------------------------------------
@@ -1142,6 +1281,23 @@ ightarrow$ 1)</div>
                     osc.stop(now + 0.08);
                 }
             } catch (e) {}
+        }
+
+        
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            const icon = document.getElementById('theme-icon');
+            if (isDark) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                if (icon) icon.innerText = 'dark_mode';
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                if (icon) icon.innerText = 'light_mode';
+            }
+            playBeep('click');
         }
 
         function toggleAudio() {
@@ -1215,7 +1371,7 @@ ightarrow$ 1)</div>
             const badge = document.getElementById('header-slide-badge');
             const name = document.getElementById('header-slide-name');
             const formattedCurrent = (currentSlide + 1 < 10) ? `0${currentSlide + 1}` : `${currentSlide + 1}`;
-            if (badge) badge.innerText = `SCENE ${formattedCurrent} / 23`;
+            if (badge) badge.innerText = `SCENE ${formattedCurrent} / 22`;
             if (name && slideTitles[currentSlide]) name.innerText = slideTitles[currentSlide].split('// ')[1];
 
             // Update Bottom Dots
@@ -1307,6 +1463,9 @@ ightarrow$ 1)</div>
             } else if (e.key === '0') {
                 lastNavTime = now;
                 goToSlide(9);
+            }
+            else if (e.key === 't' || e.key === 'T' || e.key === 'd' || e.key === 'D') {
+                toggleTheme();
             }
             // Fullscreen & Mute Hotkeys
             else if (e.key === 'f' || e.key === 'F') {
