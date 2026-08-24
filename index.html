@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Why Startups Fail Despite Having Good Products — Watch Dogs</title>
+    <meta name="description" content="Why Startups Fail Despite Having Good Products: A high-fidelity kinetic post-mortem diagnostic presentation by Team Watch Dogs."/>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <!-- Tailwind CSS with Container Queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Tailwind Config based on DESIGN.md specification -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#131313",
+                        "surface-dim": "#131313",
+                        "surface-bright": "#3a3939",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container": "#201f1f",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-container-highest": "#353534",
+                        "on-surface": "#e5e2e1",
+                        "on-surface-variant": "#cfc4c5",
+                        "inverse-surface": "#e5e2e1",
+                        "inverse-on-surface": "#313030",
+                        "outline": "#988e90",
+                        "outline-variant": "#4c4546",
+                        "surface-tint": "#c6c6c6",
+                        "primary": "#c6c6c6",
+                        "on-primary": "#303030",
+                        "primary-container": "#000000",
+                        "on-primary-container": "#757575",
+                        "inverse-primary": "#5e5e5e",
+                        "secondary": "#c6c6c7",
+                        "on-secondary": "#2f3131",
+                        "secondary-container": "#454747",
+                        "on-secondary-container": "#b4b5b5",
+                        "tertiary": "#4ae176",
+                        "on-tertiary": "#003915",
+                        "tertiary-container": "#000000",
+                        "on-tertiary-container": "#00883c",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#e2e2e2",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-primary-fixed": "#1b1b1b",
+                        "on-primary-fixed-variant": "#474747",
+                        "secondary-fixed": "#e2e2e2",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-secondary-fixed-variant": "#454747",
+                        "tertiary-fixed": "#6bff8f",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-tertiary-fixed": "#002109",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "background": "#000000",
+                        "on-background": "#e5e2e1",
+                        "surface-variant": "#353534"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "sm": "0.125rem",
+                        "md": "0.375rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "base": "8px",
+                        "gutter": "24px",
+                        "stack-sm": "16px",
+                        "stack-md": "32px",
+                        "stack-lg": "80px",
+                        "container-padding": "48px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["Inter", "sans-serif"],
+                        "headline-xl": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"],
+                        "metric-xl": ["JetBrains Mono", "monospace"],
+                        "body-lg": ["JetBrains Mono", "monospace"],
+                        "body-sm": ["JetBrains Mono", "monospace"],
+                        "label-caps": ["JetBrains Mono", "monospace"]
+                    },
+                    fontSize: {
+                        "display-lg": ["100px", { lineHeight: "105%", letterSpacing: "-0.04em", fontWeight: "800" }],
+                        "display-md": ["64px", { lineHeight: "110%", letterSpacing: "-0.03em", fontWeight: "800" }],
+                        "headline-xl": ["56px", { lineHeight: "115%", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-lg": ["36px", { lineHeight: "120%", fontWeight: "600" }],
+                        "metric-xl": ["48px", { lineHeight: "100%", letterSpacing: "-0.02em", fontWeight: "500" }],
+                        "body-lg": ["17px", { lineHeight: "160%", fontWeight: "400" }],
+                        "body-sm": ["13px", { lineHeight: "150%", fontWeight: "400" }],
+                        "label-caps": ["11px", { lineHeight: "100%", letterSpacing: "0.12em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Post-Mortem Styling */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background-color: #000000;
+            color: #e5e2e1;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Scanlines & CRT FX */
+        .scanlines {
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.35) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        .dot-grid {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+        }
+
+        .crt-flicker {
+            animation: crtFlicker 0.15s infinite;
+        }
+        @keyframes crtFlicker {
+            0% { opacity: 0.98; }
+            50% { opacity: 1; }
+            100% { opacity: 0.98; }
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.025);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-panel-hover {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-panel-hover:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Pulses and Glows */
+        @keyframes pulseNode {
+            0% { box-shadow: 0 0 0 0 rgba(255, 180, 171, 0.4); }
+            70% { box-shadow: 0 0 0 14px rgba(255, 180, 171, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 180, 171, 0); }
+        }
+        .pulse-error {
+            animation: pulseNode 2s infinite ease-out;
+        }
+
+        @keyframes pulseGreen {
+            0% { box-shadow: 0 0 0 0 rgba(74, 225, 118, 0.4); }
+            70% { box-shadow: 0 0 0 14px rgba(74, 225, 118, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 225, 118, 0); }
+        }
+        .pulse-tertiary {
+            animation: pulseGreen 2s infinite ease-out;
+        }
+
+        /* Blinking Cursor */
+        .cursor-blink {
+            animation: blink 0.9s step-end infinite;
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background-color: currentColor;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Slide Transitions */
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: scale(0.985);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 80px;
+            padding-bottom: 80px;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        /* Slide Exit / Enter Classes */
+        .slide.slide-enter-right {
+            transform: translateX(40px) scale(0.98);
+        }
+        .slide.slide-enter-left {
+            transform: translateX(-40px) scale(0.98);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Radial Node Styling */
+        .radial-node {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle)));
+            transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .radial-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+            transform-origin: left center;
+            width: var(--radius);
+            transform: translateY(-50%) rotate(var(--angle));
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Terminal Matrix / Drawer */
+        #cli-drawer {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        }
+        #cli-drawer.hidden-drawer {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Modal Overlay */
+        .hud-modal {
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        .hud-modal.modal-closed {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            accent-color: #ffb4ab;
+        }
+    </style>
+</head>
+<body class="bg-black text-on-surface select-none relative crt-flicker">
+
+    <!-- Ambient FX Overlays -->
+    <div class="fixed inset-0 dot-grid z-0 opacity-60"></div>
+    <div class="fixed inset-0 scanlines z-0 opacity-40"></div>
+
+    <!-- ========================================================================= -->
+    <!-- TOP APP BAR (HEADER)                                                      -->
+    <!-- ========================================================================= -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/10 px-6 md:px-12 h-[72px] flex items-center justify-between">
+        <!-- Brand Title / Reboot -->
+        <div class="flex items-center gap-4 cursor-pointer group" onclick="goToSlide(0)" title="Return to Boot Sequence">
+            <div class="w-3 h-3 rounded-full bg-tertiary animate-pulse shadow-[0_0_10px_rgba(74,225,118,0.7)]"></div>
+            <div class="flex flex-col">
+                <span class="font-display-lg text-[16px] sm:text-[18px] md:text-[20px] font-bold tracking-tighter text-on-surface group-hover:text-white transition-colors">
+                    WATCH DOGS // POST-MORTEM
+                </span>
+                <span class="font-label-caps text-[8px] sm:text-[9px] text-outline tracking-[0.2em] -mt-1 hidden sm:block">
+                    WHY STARTUPS FAIL DESPITE GOOD PRODUCTS
+                </span>
+            </div>
+        </div>
+
+        <!-- Center Slide Selector & Title -->
+        <div class="hidden lg:flex items-center gap-3">
+            <div class="px-3 py-1 glass-panel rounded border border-white/10 flex items-center gap-2">
+                <span id="header-slide-badge" class="font-label-caps text-tertiary text-xs">SCENE 01 / 08</span>
+                <span class="text-white/20">|</span>
+                <span id="header-slide-name" class="font-label-caps text-on-surface-variant text-xs truncate max-w-[280px]">BOOT SEQUENCE</span>
+            </div>
+        </div>
+
+        <!-- Right Quick Controls -->
+        <div class="flex items-center gap-2 md:gap-3">
+            <!-- Autoplay / Presentation Mode -->
+            <button id="btn-autoplay" onclick="toggleAutoplay()" class="px-2.5 py-1.5 glass-panel rounded hover:bg-white/10 text-outline hover:text-white transition-all text-xs font-label-caps flex items-center gap-1.5" title="Toggle Auto-Play Presentation (Key: A)">
+                <span class="material-symbols-outlined text-[16px]" id="autoplay-icon">play_arrow</span>
+                <span class="hidden md:inline" id="autoplay-label">AUTO</span>
+            </button>
+
+            <!-- Sound FX Toggle -->
+            <button id="btn-audio" onclick="toggleAudio()" class="p-2 glass-panel rounded hover:bg-white/10 text-outline hover:text-tertiary transition-all" title="Toggle Cyber Audio Synthesizer (Key: M)">
+                <span class="material-symbols-outlined text-[18px]" id="audio-icon">volume_up</span>
+            </button>
+
+            <!-- Matrix / Overview Grid Toggle -->
+            <button onclick="toggleOverviewModal()" class="p-2 glass-panel rounded hover:bg-white/10 text-outline hover:text-white transition-all" title="Slide Overview Matrix (Key: O)">
+                <span class="material-symbols-outlined text-[18px]">grid_view</span>
+            </button>
+
+            <!-- Interactive CLI Terminal Toggle -->
+            <button onclick="toggleCliDrawer()" class="p-2 glass-panel rounded hover:bg-white/10 text-outline hover:text-white transition-all" title="Open Diagnostic CLI Terminal (Key: ` or ~)">
+                <span class="material-symbols-outlined text-[18px]">terminal</span>
+            </button>
+
+            <!-- Fullscreen Toggle -->
+            <button onclick="toggleFullScreen()" class="p-2 glass-panel rounded hover:bg-white/10 text-outline hover:text-white transition-all hidden sm:flex" title="Toggle Fullscreen Mode (Key: F)">
+                <span class="material-symbols-outlined text-[18px]" id="fullscreen-icon">fullscreen</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDES CONTAINER (8 INTERACTIVE SCENES)                                   -->
+    <!-- ========================================================================= -->
+    <main id="presentation-viewport" class="relative w-full h-full overflow-hidden">
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SLIDE 01: BOOT SEQUENCE & TEAM ROSTER                                 -->
+        <!-- --------------------------------------------------------------------- -->
+        <section class="slide active px-4 sm:px-6 md:px-container-padding" id="slide-0">
+            <div class="w-full max-w-6xl mx-auto flex flex-col items-center text-center my-auto py-2 sm:py-4">
+                
+                <!-- Team & Mission Badge -->
+                <div class="inline-flex items-center gap-2 sm:gap-3 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-tertiary/30 bg-tertiary/5 text-tertiary font-label-caps text-[10px] sm:text-xs mb-4 sm:mb-5 shadow-[0_0_15px_rgba(74,225,118,0.15)]">
+                    <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                    <span class="font-bold tracking-widest text-white">TEAM // WATCH DOGS</span>
+                    <span class="text-white/20">|</span>
+                    <span class="text-on-surface-variant tracking-wider uppercase">FORENSIC POST-MORTEM CASE STUDY</span>
+                </div>
+
+                <!-- Main Presentation Title -->
+                <h1 class="font-display-lg text-[28px] sm:text-[42px] md:text-[58px] lg:text-[68px] text-white tracking-tighter font-extrabold leading-[1.1] mb-2 sm:mb-3 max-w-5xl">
+                    Why Startups Fail Despite Having Good Products
+                </h1>
+                <p class="font-label-caps text-[10px] sm:text-xs md:text-sm text-outline-variant tracking-[0.2em] sm:tracking-[0.25em] uppercase mb-6 sm:mb-8 max-w-3xl">
+                    A Systematic Autopsy of Product Excellence vs. Commercial Physics
+                </p>
+
+                <!-- Dual Bento Grid: Team Roster + System Diagnostic Telemetry -->
+                <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 text-left mb-6 sm:mb-8">
+                    
+                    <!-- Left Bento: Team Watch Dogs Investigators (7 cols) -->
+                    <div class="lg:col-span-7 glass-panel p-4 sm:p-6 rounded-lg border border-white/10 shadow-2xl relative overflow-hidden flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
+                                <div class="flex items-center gap-2 font-label-caps text-xs text-white font-bold">
+                                    <span class="material-symbols-outlined text-sm text-tertiary">groups</span>
+                                    <span>INVESTIGATION TEAM // WATCH DOGS</span>
+                                </div>
+                                <span class="font-label-caps text-[10px] text-tertiary flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                    6 MEMBERS ACTIVE
+                                </span>
+                            </div>
+
+                            <!-- 6 Team Member Badges (2x3 Grid) -->
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                                <!-- Member 1 -->
+                                <div class="glass-panel p-2.5 sm:p-3 rounded border border-white/10 hover:border-tertiary transition-all group flex items-center gap-2.5 bg-black/40">
+                                    <div class="w-6 h-6 rounded bg-white/5 border border-white/10 flex items-center justify-center text-tertiary text-[10px] font-bold font-label-caps group-hover:bg-tertiary group-hover:text-black transition-colors">01</div>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-white text-xs font-label-caps truncate group-hover:text-tertiary transition-colors">Nandeesh</span>
+                                        <span class="text-[8px] text-outline font-label-caps tracking-wider">LEAD / AUDIT</span>
+                                    </div>
+                                </div>
+
+                                <!-- Member 2 -->
+                                <div class="glass-panel p-2.5 sm:p-3 rounded border border-white/10 hover:border-tertiary transition-all group flex items-center gap-2.5 bg-black/40">
+                                    <div class="w-6 h-6 rounded bg-white/5 border border-white/10 flex items-center justify-center text-tertiary text-[10px] font-bold font-label-caps group-hover:bg-tertiary group-hover:text-black transition-colors">02</div>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-white text-xs font-label-caps truncate group-hover:text-tertiary transition-colors">Gaurav</span>
+                                        <span class="text-[8px] text-outline font-label-caps tracking-wider">ANALYST</span>
+                                    </div>
+                                </div>
+
+                                <!-- Member 3 -->
+                                <div class="glass-panel p-2.5 sm:p-3 rounded border border-white/10 hover:border-tertiary transition-all group flex items-center gap-2.5 bg-black/40">
+                                    <div class="w-6 h-6 rounded bg-white/5 border border-white/10 flex items-center justify-center text-tertiary text-[10px] font-bold font-label-caps group-hover:bg-tertiary group-hover:text-black transition-colors">03</div>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-white text-xs font-label-caps truncate group-hover:text-tertiary transition-colors">Nadeem</span>
+                                        <span class="text-[8px] text-outline font-label-caps tracking-wider">STRATEGY</span>
+                                    </div>
+                                </div>
+
+                                <!-- Member 4 -->
+                                <div class="glass-panel p-2.5 sm:p-3 rounded border border-white/10 hover:border-tertiary transition-all group flex items-center gap-2.5 bg-black/40">
+                                    <div class="w-6 h-6 rounded bg-white/5 border border-white/10 flex items-center justify-center text-tertiary text-[10px] font-bold font-label-caps group-hover:bg-tertiary group-hover:text-black transition-colors">04</div>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-white text-xs font-label-caps truncate group-hover:text-tertiary transition-colors">Nakul</span>
+                                        <span class="text-[8px] text-outline font-label-caps tracking-wider">ECONOMICS</span>
+                                    </div>
+                                </div>
+
+                                <!-- Member 5 -->
+                                <div class="glass-panel p-2.5 sm:p-3 rounded border border-white/10 hover:border-tertiary transition-all group flex items-center gap-2.5 bg-black/40">
+                                    <div class="w-6 h-6 rounded bg-white/5 border border-white/10 flex items-center justify-center text-tertiary text-[10px] font-bold font-label-caps group-hover:bg-tertiary group-hover:text-black transition-colors">05</div>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-white text-xs font-label-caps truncate group-hover:text-tertiary transition-colors">Nandhini</span>
+                                        <span class="text-[8px] text-outline font-label-caps tracking-wider">RESEARCH</span>
+                                    </div>
+                                </div>
+
+                                <!-- Member 6 -->
+                                <div class="glass-panel p-2.5 sm:p-3 rounded border border-white/10 hover:border-tertiary transition-all group flex items-center gap-2.5 bg-black/40">
+                                    <div class="w-6 h-6 rounded bg-white/5 border border-white/10 flex items-center justify-center text-tertiary text-[10px] font-bold font-label-caps group-hover:bg-tertiary group-hover:text-black transition-colors">06</div>
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-white text-xs font-label-caps truncate group-hover:text-tertiary transition-colors">Namrata</span>
+                                        <span class="text-[8px] text-outline font-label-caps tracking-wider">FORENSICS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-white/5 text-[10px] font-label-caps text-outline flex justify-between items-center">
+                            <span>TARGET CASE: VELA CLOUD INC.</span>
+                            <span class="text-tertiary">SECTOR: B2B SAAS</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Bento: System Diagnostic Telemetry (5 cols) -->
+                    <div class="lg:col-span-5 glass-panel p-4 sm:p-6 rounded-lg border border-white/10 shadow-2xl relative overflow-hidden flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
+                                <span class="font-label-caps text-xs text-primary flex items-center gap-2 font-bold">
+                                    <span class="material-symbols-outlined text-sm text-tertiary">analytics</span>
+                                    INITIAL TELEMETRY
+                                </span>
+                                <span class="font-label-caps text-[10px] text-tertiary animate-pulse">STATUS: INITIALIZED</span>
+                            </div>
+
+                            <div class="space-y-3 font-body-sm">
+                                <!-- Metric 1 -->
+                                <div class="flex flex-col gap-1.5">
+                                    <div class="flex justify-between text-on-surface-variant text-[11px]">
+                                        <span>PRODUCT QUALITY</span>
+                                        <span class="text-tertiary font-bold">94%</span>
+                                    </div>
+                                    <div class="h-1 w-full bg-white/10 relative overflow-hidden rounded-full">
+                                        <div class="h-full bg-tertiary w-[94%]"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Metric 2 -->
+                                <div class="flex flex-col gap-1.5">
+                                    <div class="flex justify-between text-on-surface-variant text-[11px]">
+                                        <span>CUSTOMER LOVE</span>
+                                        <span class="text-tertiary font-bold">91%</span>
+                                    </div>
+                                    <div class="h-1 w-full bg-white/10 relative overflow-hidden rounded-full">
+                                        <div class="h-full bg-tertiary w-[91%]"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Metric 3 -->
+                                <div class="flex flex-col gap-1.5">
+                                    <div class="flex justify-between text-on-surface-variant text-[11px]">
+                                        <span>TECHNICAL EXCELLENCE</span>
+                                        <span class="text-tertiary font-bold">96%</span>
+                                    </div>
+                                    <div class="h-1 w-full bg-white/10 relative overflow-hidden rounded-full">
+                                        <div class="h-full bg-tertiary w-[96%]"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Metric 4 -->
+                                <div class="flex flex-col gap-1.5">
+                                    <div class="flex justify-between text-on-surface-variant text-[11px]">
+                                        <span>MARKET INTEREST</span>
+                                        <span class="text-tertiary font-bold">88%</span>
+                                    </div>
+                                    <div class="h-1 w-full bg-white/10 relative overflow-hidden rounded-full">
+                                        <div class="h-full bg-tertiary w-[88%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-white/5 text-[10px] font-label-caps text-error flex justify-between items-center">
+                            <span>SURVIVAL PROGNOSIS</span>
+                            <span class="font-bold">CRITICAL FAILURE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Launch Prompt Action -->
+                <div class="flex flex-col items-center gap-3">
+                    <button onclick="goToSlide(1)" class="group relative px-7 sm:px-9 py-3 sm:py-3.5 bg-white hover:bg-tertiary text-black font-label-caps text-xs sm:text-sm tracking-wider font-bold rounded transition-all duration-200 flex items-center gap-3 shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:shadow-[0_0_35px_rgba(74,225,118,0.4)]">
+                        <span>BEGIN INVESTIGATION</span>
+                        <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </button>
+                    <div class="font-body-sm text-[11px] text-outline opacity-80">
+                        <span class="text-tertiary">&gt;</span> Press <span class="border border-white/20 px-1.5 py-0.5 rounded text-white text-[10px]">SPACE</span> or <span class="border border-white/20 px-1.5 py-0.5 rounded text-white text-[10px]">→</span> to navigate
+                        <span class="cursor-blink"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SLIDE 02: THE PERFECT PRODUCT                                         -->
+        <!-- --------------------------------------------------------------------- -->
+        <section class="slide px-6 md:px-container-padding" id="slide-1">
+            <div class="w-full max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center my-auto">
+                <!-- Left Column: Story & Metrics -->
+                <div class="lg:col-span-5 flex flex-col gap-6">
+                    <div>
+                        <div class="font-label-caps text-xs text-tertiary mb-2 uppercase flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                            PHASE 01 // THE INITIAL ILLUSION
+                        </div>
+                        <h2 class="font-headline-xl text-3xl sm:text-4xl md:text-5xl text-white font-bold tracking-tight">
+                            Everything looked right.
+                        </h2>
+                        <p class="font-body-lg text-base md:text-lg text-on-surface-variant mt-2">
+                            Users loved the product. NPS was soaring. Customer feedback was glowing.
+                        </p>
+                    </div>
+
+                    <!-- User Testimonial Excerpt -->
+                    <div class="glass-panel p-5 rounded-lg border-l-4 border-l-tertiary">
+                        <div class="flex items-center gap-1 mb-2 text-tertiary">
+                            <span class="material-symbols-outlined text-sm">star</span>
+                            <span class="material-symbols-outlined text-sm">star</span>
+                            <span class="material-symbols-outlined text-sm">star</span>
+                            <span class="material-symbols-outlined text-sm">star</span>
+                            <span class="material-symbols-outlined text-sm">star</span>
+                            <span class="font-label-caps text-[10px] text-outline ml-2">VERIFIED COHORT</span>
+                        </div>
+                        <blockquote class="font-body-lg text-base md:text-lg text-white font-medium italic">
+                            "Customers genuinely wanted it. The interface was revolutionary and solved our daily reporting nightmare."
+                        </blockquote>
+                        <div class="font-label-caps text-[10px] text-outline mt-3 flex justify-between items-center">
+                            <span>// USER INTERVIEW EXCERPT _ ID 4092</span>
+                            <span class="text-tertiary">SENTIMENT: 99.2% POSITIVE</span>
+                        </div>
+                    </div>
+
+                    <!-- 2x2 Metric Bento Grid -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="glass-panel p-4 rounded flex flex-col gap-2">
+                            <span class="font-label-caps text-[10px] text-outline">PRODUCT QUALITY</span>
+                            <div class="font-metric-xl text-2xl md:text-3xl text-white font-bold">94<span class="text-sm text-outline">/100</span></div>
+                            <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-tertiary w-[94%]"></div></div>
+                        </div>
+
+                        <div class="glass-panel p-4 rounded flex flex-col gap-2">
+                            <span class="font-label-caps text-[10px] text-outline">USER SATISFACTION</span>
+                            <div class="font-metric-xl text-2xl md:text-3xl text-white font-bold">91<span class="text-sm text-outline">%</span></div>
+                            <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-tertiary w-[91%]"></div></div>
+                        </div>
+
+                        <div class="glass-panel p-4 rounded flex flex-col gap-2">
+                            <span class="font-label-caps text-[10px] text-outline">NPS SCORE</span>
+                            <div class="font-metric-xl text-2xl md:text-3xl text-tertiary font-bold">+67</div>
+                            <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-tertiary w-[85%]"></div></div>
+                        </div>
+
+                        <div class="glass-panel p-4 rounded flex flex-col gap-2">
+                            <span class="font-label-caps text-[10px] text-outline">APP STORE RATING</span>
+                            <div class="font-metric-xl text-2xl md:text-3xl text-white font-bold">4.8<span class="text-sm text-outline">/5.0</span></div>
+                            <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-tertiary w-[96%]"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Vela Build 84.1 Dashboard Mockup -->
+                <div class="lg:col-span-7 h-[420px] sm:h-[480px] md:h-[540px] glass-panel rounded-xl overflow-hidden flex flex-col border border-white/15 shadow-2xl relative">
+                    <!-- Window Titlebar -->
+                    <div class="w-full h-9 bg-surface-container-lowest border-b border-white/10 flex items-center px-4 justify-between z-20">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-full bg-outline/60"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-outline/60"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-outline/60"></div>
+                            <span class="font-label-caps text-[11px] text-on-surface-variant ml-2">VELA // BUILD 84.1-PROD</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-[10px] font-label-caps text-outline">
+                            <span class="text-tertiary flex items-center gap-1"><span class="w-1.5 h-1.5 bg-tertiary rounded-full animate-ping"></span> LIVE CLOUD</span>
+                            <span>LATENCY: 14ms</span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Mock Dashboard Body -->
+                    <div class="flex-1 bg-black/90 p-5 overflow-y-auto flex flex-col gap-4 relative">
+                        <!-- Dashboard Top Stats -->
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-white/[0.03] p-3 rounded border border-white/5">
+                                <span class="font-label-caps text-[9px] text-outline">ACTIVE SESSIONS</span>
+                                <div class="text-lg font-bold text-white font-metric-xl mt-1">12,480</div>
+                                <span class="text-[10px] text-tertiary">+18.4% this week</span>
+                            </div>
+                            <div class="bg-white/[0.03] p-3 rounded border border-white/5">
+                                <span class="font-label-caps text-[9px] text-outline">QUERIES / SEC</span>
+                                <div class="text-lg font-bold text-white font-metric-xl mt-1">4,219</div>
+                                <span class="text-[10px] text-tertiary">99.98% uptime</span>
+                            </div>
+                            <div class="bg-white/[0.03] p-3 rounded border border-white/5">
+                                <span class="font-label-caps text-[9px] text-outline">AVG RESPONSE</span>
+                                <div class="text-lg font-bold text-white font-metric-xl mt-1">14.2 ms</div>
+                                <span class="text-[10px] text-outline">Zero anomalies</span>
+                            </div>
+                        </div>
+
+                        <!-- Real-time SVG Chart Simulation -->
+                        <div class="bg-white/[0.03] p-4 rounded border border-white/5 flex-1 flex flex-col justify-between">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-label-caps text-[10px] text-primary">REALTIME TELEMETRY STREAM</span>
+                                <span class="font-label-caps text-[9px] text-outline">SYNCHRONIZED</span>
+                            </div>
+                            <div class="w-full h-32 relative">
+                                <svg class="w-full h-full" viewBox="0 0 500 120" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="#4ae176" stop-opacity="0.3"/>
+                                            <stop offset="100%" stop-color="#4ae176" stop-opacity="0.0"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- Grid lines -->
+                                    <line x1="0" y1="30" x2="500" y2="30" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                                    <line x1="0" y1="60" x2="500" y2="60" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                                    <line x1="0" y1="90" x2="500" y2="90" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                                    <!-- Area Fill -->
+                                    <path d="M0,100 Q60,40 120,70 T240,30 T360,50 T450,20 L500,15 L500,120 L0,120 Z" fill="url(#chartGrad)"/>
+                                    <!-- Line Curve -->
+                                    <path d="M0,100 Q60,40 120,70 T240,30 T360,50 T450,20 L500,15" fill="none" stroke="#4ae176" stroke-width="2"/>
+                                    <circle cx="500" cy="15" r="4" fill="#4ae176" class="animate-ping"/>
+                                    <circle cx="500" cy="15" r="3" fill="#ffffff"/>
+                                </svg>
+                            </div>
+                            <div class="flex justify-between text-[9px] font-label-caps text-outline border-t border-white/5 pt-2">
+                                <span>00:00:00</span>
+                                <span>00:00:15</span>
+                                <span>00:00:30</span>
+                                <span>00:00:45</span>
+                                <span class="text-tertiary">LIVE STREAM</span>
+                            </div>
+                        </div>
+
+                        <!-- System Log lines -->
+                        <div class="bg-black/60 p-2.5 rounded border border-white/5 font-body-sm text-[10px] text-outline flex flex-col gap-1">
+                            <div><span class="text-tertiary">[OK]</span> Core engine initialized without faults.</div>
+                            <div><span class="text-tertiary">[OK]</span> Customer satisfaction index: 94.2 / 100.</div>
+                            <div class="text-error"><span class="text-error">[WARN]</span> Cash burn rate exceeding unit retention threshold...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SLIDE 03: THE CONTRADICTION                                           -->
+        <!-- --------------------------------------------------------------------- -->
+        <section class="slide px-6 md:px-container-padding" id="slide-2">
+            <div class="w-full max-w-6xl mx-auto flex flex-col items-center my-auto">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center gap-2 font-label-caps text-xs text-error mb-2">
+                        <span class="w-2 h-2 rounded-full bg-error pulse-error"></span>
+                        DIAGNOSTIC CORE // CONTRADICTION DETECTED
+                    </div>
+                    <h2 class="font-headline-xl text-3xl sm:text-5xl md:text-6xl text-white font-extrabold tracking-tight">
+                        Then why did it fail?
+                    </h2>
+                    <p class="font-body-lg text-sm sm:text-base text-outline-variant mt-2">
+                        The fatal disconnect between product craft and commercial physics.
+                    </p>
+                </div>
+
+                <!-- Split Screen Side-by-Side Analysis -->
+                <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+                    <!-- Center Divider Marker (Desktop) -->
+                    <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black border border-white/20 items-center justify-center z-20">
+                        <span class="font-label-caps text-[10px] text-outline font-bold">VS</span>
+                    </div>
+
+                    <!-- LEFT: The Product (Optimal) -->
+                    <div class="glass-panel p-6 md:p-8 rounded-lg border-t-2 border-t-tertiary flex flex-col justify-between gap-6 shadow-xl relative overflow-hidden">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="font-label-caps text-xs text-outline block mb-1">AUDIT 01</span>
+                                <h3 class="font-headline-lg text-2xl font-bold text-white uppercase">The Product</h3>
+                                <p class="font-body-sm text-xs text-outline">System Usability & Experience</p>
+                            </div>
+                            <div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-tertiary/10 text-tertiary font-label-caps text-xs border border-tertiary/20">
+                                <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                                OPTIMAL
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <div class="font-metric-xl text-5xl md:text-6xl font-bold text-white">
+                                94<span class="text-lg text-outline">/100</span>
+                            </div>
+                            <div class="h-1.5 bg-white/10 w-full rounded-full overflow-hidden">
+                                <div class="h-full bg-tertiary w-[94%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="font-body-sm text-xs space-y-2.5 border-t border-white/10 pt-4">
+                            <div class="flex justify-between border-b border-white/5 pb-1.5">
+                                <span class="text-outline">INITIAL SATISFACTION</span>
+                                <span class="text-tertiary font-bold">88% (EXCELLENT)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-1.5">
+                                <span class="text-outline">NET PROMOTER SCORE</span>
+                                <span class="text-tertiary font-bold">+64 (WORLD CLASS)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-outline">ENGAGEMENT DEPTH</span>
+                                <span class="text-tertiary font-bold">HIGH FREQUENCY</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: The Business (Critical) -->
+                    <div class="glass-panel p-6 md:p-8 rounded-lg border-t-2 border-t-error flex flex-col justify-between gap-6 shadow-xl relative overflow-hidden bg-error/[0.02]">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="font-label-caps text-xs text-outline block mb-1">AUDIT 02</span>
+                                <h3 class="font-headline-lg text-2xl font-bold text-white uppercase">The Business</h3>
+                                <p class="font-body-sm text-xs text-outline">Unit Economics & Viability</p>
+                            </div>
+                            <div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-error/10 text-error font-label-caps text-xs border border-error/20">
+                                <span class="w-2 h-2 rounded-full bg-error pulse-error"></span>
+                                CRITICAL
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <div class="font-metric-xl text-5xl md:text-6xl font-bold text-error">
+                                23<span class="text-lg text-outline">/100</span>
+                            </div>
+                            <div class="h-1.5 bg-white/10 w-full rounded-full overflow-hidden">
+                                <div class="h-full bg-error w-[23%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="font-body-sm text-xs space-y-2.5 border-t border-white/10 pt-4">
+                            <div class="flex justify-between border-b border-white/5 pb-1.5">
+                                <span class="text-outline">BURN RATE DEFICIT</span>
+                                <span class="text-error font-bold">-₹7,00,000 / MO</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-1.5">
+                                <span class="text-outline">CAC TO LTV RATIO</span>
+                                <span class="text-error font-bold">INVERTED (0.67x)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-outline">REMAINING RUNWAY</span>
+                                <span class="text-error font-bold">2.4 MONTHS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Central Takeaway Banner -->
+                <div class="mt-8 px-6 py-3.5 glass-panel rounded border border-white/15 flex items-center gap-3 text-center">
+                    <span class="material-symbols-outlined text-error text-xl">warning</span>
+                    <span class="font-label-caps text-xs md:text-sm text-white tracking-wider font-bold">
+                        GREAT PRODUCT ≠ GREAT BUSINESS
+                    </span>
+                    <span class="material-symbols-outlined text-error text-xl">warning</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SLIDE 04: THE FAILURE STACK                                           -->
+        <!-- --------------------------------------------------------------------- -->
+        <section class="slide px-6 md:px-container-padding" id="slide-3">
+            <div class="w-full max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto">
+                
+                <!-- Left: Orbital Node Radar System -->
+                <div class="lg:col-span-7 relative h-[420px] sm:h-[500px] flex items-center justify-center">
+                    <!-- SVG Connecting Radial Lines -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-0">
+                        <circle cx="50%" cy="50%" r="90" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="4 4"/>
+                        <circle cx="50%" cy="50%" r="170" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                        <line x1="50%" y1="50%" x2="50%" y2="15%" stroke="rgba(74,225,118,0.4)" stroke-width="1"/>
+                        <line x1="50%" y1="50%" x2="85%" y2="30%" stroke="rgba(255,180,171,0.7)" stroke-width="1.5"/>
+                        <line x1="50%" y1="50%" x2="85%" y2="70%" stroke="rgba(255,180,171,0.4)" stroke-width="1"/>
+                        <line x1="50%" y1="50%" x2="50%" y2="85%" stroke="rgba(255,180,171,0.4)" stroke-width="1"/>
+                        <line x1="50%" y1="50%" x2="15%" y2="70%" stroke="rgba(255,180,171,0.4)" stroke-width="1"/>
+                        <line x1="50%" y1="50%" x2="15%" y2="30%" stroke="rgba(255,180,171,0.4)" stroke-width="1"/>
+                    </svg>
+
+                    <!-- Center Core: VELA -->
+                    <div class="relative z-10 w-24 h-24 rounded-full glass-panel border border-white/20 flex flex-col items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                        <div class="w-2.5 h-2.5 rounded-full bg-white mb-1 shadow-[0_0_8px_white]"></div>
+                        <span class="font-label-caps text-xs text-white font-bold tracking-widest">VELA</span>
+                        <span class="font-label-caps text-[8px] text-outline">CORE</span>
+                    </div>
+
+                    <!-- Node 1: PRODUCT (Top, Green) -->
+                    <button onclick="selectFailureNode('product')" class="failure-node-btn absolute top-[12%] left-1/2 -translate-x-1/2 z-20 glass-panel px-3 py-1.5 rounded hover:border-tertiary transition-all flex items-center gap-2 group cursor-pointer">
+                        <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                        <span class="font-label-caps text-[11px] text-outline group-hover:text-white">PRODUCT</span>
+                    </button>
+
+                    <!-- Node 2: DISTRIBUTION (Top-Right, Active Red) -->
+                    <button onclick="selectFailureNode('distribution')" class="failure-node-btn active-node absolute top-[26%] right-[8%] sm:right-[12%] z-20 glass-panel px-3.5 py-2 rounded border border-error bg-error/10 transition-all flex items-center gap-2 group cursor-pointer shadow-[0_0_20px_rgba(255,180,171,0.3)]">
+                        <span class="w-2.5 h-2.5 rounded-full bg-error pulse-error"></span>
+                        <span class="font-label-caps text-[11px] text-error font-bold">DISTRIBUTION</span>
+                    </button>
+
+                    <!-- Node 3: RETENTION (Bottom-Right, Red) -->
+                    <button onclick="selectFailureNode('retention')" class="failure-node-btn absolute bottom-[26%] right-[8%] sm:right-[12%] z-20 glass-panel px-3 py-1.5 rounded hover:border-error transition-all flex items-center gap-2 group cursor-pointer">
+                        <span class="w-2 h-2 rounded-full bg-error/70"></span>
+                        <span class="font-label-caps text-[11px] text-outline group-hover:text-white">RETENTION</span>
+                    </button>
+
+                    <!-- Node 4: UNIT ECONOMICS (Bottom, Red) -->
+                    <button onclick="selectFailureNode('economics')" class="failure-node-btn absolute bottom-[12%] left-1/2 -translate-x-1/2 z-20 glass-panel px-3 py-1.5 rounded hover:border-error transition-all flex items-center gap-2 group cursor-pointer">
+                        <span class="w-2 h-2 rounded-full bg-error/70"></span>
+                        <span class="font-label-caps text-[11px] text-outline group-hover:text-white">UNIT ECONOMICS</span>
+                    </button>
+
+                    <!-- Node 5: CASH FLOW (Bottom-Left, Red) -->
+                    <button onclick="selectFailureNode('cashflow')" class="failure-node-btn absolute bottom-[26%] left-[8%] sm:left-[12%] z-20 glass-panel px-3 py-1.5 rounded hover:border-error transition-all flex items-center gap-2 group cursor-pointer">
+                        <span class="w-2 h-2 rounded-full bg-error/70"></span>
+                        <span class="font-label-caps text-[11px] text-outline group-hover:text-white">CASH FLOW</span>
+                    </button>
+
+                    <!-- Node 6: TIMING & MARKET (Top-Left, Red) -->
+                    <button onclick="selectFailureNode('timing')" class="failure-node-btn absolute top-[26%] left-[8%] sm:left-[12%] z-20 glass-panel px-3 py-1.5 rounded hover:border-error transition-all flex items-center gap-2 group cursor-pointer">
+                        <span class="w-2 h-2 rounded-full bg-error/70"></span>
+                        <span class="font-label-caps text-[11px] text-outline group-hover:text-white">TIMING</span>
+                    </button>
+                </div>
+
+                <!-- Right: Detailed Dynamic Diagnostic Panel -->
+                <div class="lg:col-span-5 flex flex-col justify-center">
+                    <div class="glass-panel p-6 md:p-8 rounded-lg border border-white/15 shadow-2xl relative">
+                        <!-- Panel Header -->
+                        <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-6">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-error" id="diag-status-dot"></span>
+                                <h3 class="font-label-caps text-sm text-white font-bold uppercase tracking-wider" id="diag-panel-title">
+                                    DIAGNOSTIC: DISTRIBUTION
+                                </h3>
+                            </div>
+                            <span class="font-label-caps text-[10px] text-error" id="diag-severity-badge">SEVERITY: 92%</span>
+                        </div>
+
+                        <!-- Dynamic Metrics Grid -->
+                        <div class="grid grid-cols-2 gap-4 border-b border-white/10 pb-6 mb-6 font-body-sm text-xs">
+                            <div>
+                                <span class="text-outline block text-[10px] font-label-caps" id="diag-label-1">PRODUCT STATUS</span>
+                                <span class="text-tertiary font-bold text-sm" id="diag-val-1">EXCELLENT (94/100)</span>
+                            </div>
+                            <div>
+                                <span class="text-outline block text-[10px] font-label-caps" id="diag-label-2">CUSTOMER PIPELINE</span>
+                                <span class="text-error font-bold text-sm" id="diag-val-2">CRITICALLY LOW</span>
+                            </div>
+                            <div>
+                                <span class="text-outline block text-[10px] font-label-caps" id="diag-label-3">ACQUISITION COST (CAC)</span>
+                                <span class="text-white font-metric-xl text-lg font-bold" id="diag-val-3">₹4,800</span>
+                            </div>
+                            <div>
+                                <span class="text-outline block text-[10px] font-label-caps" id="diag-label-4">ORGANIC INFLOW</span>
+                                <span class="text-white font-metric-xl text-lg font-bold" id="diag-val-4">8.0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Root Cause Analysis Body -->
+                        <div class="flex flex-col gap-2">
+                            <span class="font-label-caps text-[11px] text-error flex items-center gap-1">
+                                <span class="material-symbols-outlined text-xs">manage_search</span>
+                                &gt; ROOT_CAUSE_ANALYSIS
+                            </span>
+                            <div class="bg-black/50 p-4 rounded border border-white/5 font-body-sm text-xs text-on-surface leading-relaxed" id="diag-root-cause">
+                                Great product. Nobody knows it exists. Over-reliance on expensive paid acquisition channels resulted in unsustainably high CAC. Failure to establish organic distribution loops pre-launch.
+                            </div>
+                        </div>
+
+                        <!-- Severity Progress Bar -->
+                        <div class="mt-6 flex flex-col gap-1.5">
+                            <div class="flex justify-between font-label-caps text-[10px] text-outline">
+                                <span>FAILURE SEVERITY SCORE</span>
+                                <span class="text-error" id="diag-severity-text">92%</span>
+                            </div>
+                            <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-error transition-all duration-500" id="diag-severity-bar" style="width: 92%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3 font-label-caps text-[10px] text-outline">
+                        💡 Click on any radar node to inspect forensic failure metrics
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SLIDE 05: THE LEAKY FUNNEL                                            -->
+        <!-- --------------------------------------------------------------------- -->
+        <section class="slide px-6 md:px-container-padding" id="slide-4">
+            <div class="w-full max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center my-auto">
+                <!-- Left: Narrative -->
+                <div class="lg:col-span-5 flex flex-col gap-6">
+                    <div class="inline-flex items-center gap-2 font-label-caps text-xs text-error">
+                        <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+                        STAGE 05 // THE FUNNEL COLLAPSE
+                    </div>
+                    <h2 class="font-headline-xl text-3xl sm:text-4xl md:text-5xl text-white font-bold leading-tight">
+                        Acquisition creates users.<br/>
+                        <span class="text-outline">Retention creates companies.</span>
+                    </h2>
+                    <p class="font-body-lg text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                        The terminal diagnosis. Traffic generation scaled logarithmically while core product stickiness decayed exponentially. The funnel did not merely leak; it completely collapsed.
+                    </p>
+
+                    <!-- Interactive Retention Simulator Mini-Control -->
+                    <div class="glass-panel p-4 rounded-lg border border-white/10 flex flex-col gap-3">
+                        <div class="flex justify-between items-center">
+                            <span class="font-label-caps text-xs text-white">SIMULATE RETENTION LIFT</span>
+                            <span class="font-label-caps text-xs text-tertiary" id="retention-slider-val">+0%</span>
+                        </div>
+                        <input type="range" id="retention-slider" min="0" max="50" value="0" step="5" oninput="updateRetentionSimulation(this.value)" class="w-full h-1 bg-white/20 rounded cursor-pointer"/>
+                        <div class="flex justify-between text-[10px] font-label-caps text-outline">
+                            <span>Base: 620 Customers</span>
+                            <span id="retention-projected-val" class="text-tertiary font-bold">Projected: 620 (Dead)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Funnel & Decay Curve -->
+                <div class="lg:col-span-7 flex flex-col gap-6">
+                    <!-- Funnel Stages Panel -->
+                    <div class="glass-panel p-6 rounded-lg border border-white/15 flex flex-col gap-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                            <span class="font-label-caps text-xs text-white">CUSTOMER CONVERSION FUNNEL</span>
+                            <span class="font-label-caps text-[10px] text-outline">DROP-OFF COEFFICIENT</span>
+                        </div>
+
+                        <!-- Funnel 01: SEE -->
+                        <div class="flex flex-col gap-1.5 group cursor-default">
+                            <div class="flex justify-between font-body-sm text-xs">
+                                <span class="text-on-surface-variant">01 // SEE (IMPRESSIONS)</span>
+                                <span class="font-label-caps text-white font-bold">1,000,000 <span class="text-outline text-[10px]">(100%)</span></span>
+                            </div>
+                            <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-white/40 w-full transition-all duration-700"></div>
+                            </div>
+                        </div>
+
+                        <!-- Funnel 02: VISIT -->
+                        <div class="flex flex-col gap-1.5 group cursor-default">
+                            <div class="flex justify-between font-body-sm text-xs">
+                                <span class="text-on-surface-variant">02 // VISIT (LANDING PAGE)</span>
+                                <span class="font-label-caps text-white font-bold">100,000 <span class="text-outline text-[10px]">(10.0%)</span></span>
+                            </div>
+                            <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-white/60 w-[10%] transition-all duration-700"></div>
+                            </div>
+                        </div>
+
+                        <!-- Funnel 03: TRY -->
+                        <div class="flex flex-col gap-1.5 group cursor-default">
+                            <div class="flex justify-between font-body-sm text-xs">
+                                <span class="text-on-surface-variant">03 // TRY (FREE SIGNUP)</span>
+                                <span class="font-label-caps text-error font-bold">10,000 <span class="text-outline text-[10px]">(1.0%)</span></span>
+                            </div>
+                            <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-error/70 w-[1%] transition-all duration-700"></div>
+                            </div>
+                        </div>
+
+                        <!-- Funnel 04: PAY -->
+                        <div class="flex flex-col gap-1.5 group cursor-default">
+                            <div class="flex justify-between font-body-sm text-xs">
+                                <span class="text-on-surface-variant">04 // PAY (PAID CONVERSION)</span>
+                                <span class="font-label-caps text-error font-bold">2,000 <span class="text-outline text-[10px]">(0.2%)</span></span>
+                            </div>
+                            <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-error w-[4px] shadow-[0_0_8px_#ffb4ab]"></div>
+                            </div>
+                        </div>
+
+                        <!-- Funnel 05: STAY -->
+                        <div class="flex flex-col gap-1.5 group cursor-default">
+                            <div class="flex justify-between font-body-sm text-xs">
+                                <span class="text-on-surface-variant">05 // STAY (D30 ACTIVE RETAINED)</span>
+                                <span class="font-label-caps text-error font-bold px-2 py-0.5 bg-error/20 rounded border border-error/30" id="funnel-stay-count">620 (0.062%)</span>
+                            </div>
+                            <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-error w-[2px] shadow-[0_0_10px_#ffb4ab]"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2-Card KPI Bento (D30 Retention & Decay Graph) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="glass-panel p-5 rounded-lg border-l-4 border-l-error flex flex-col justify-between">
+                            <span class="font-label-caps text-[10px] text-outline">CRITICAL FAILURE METRIC</span>
+                            <div class="my-3">
+                                <div class="font-metric-xl text-4xl sm:text-5xl font-bold text-error">31%</div>
+                                <span class="font-body-sm text-xs text-on-surface-variant">D30 COHORT RETENTION</span>
+                            </div>
+                            <span class="text-[10px] text-error font-label-caps">INDUSTRY BENCHMARK: 65%+</span>
+                        </div>
+
+                        <div class="glass-panel p-5 rounded-lg flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex justify-between text-[10px] font-label-caps text-outline z-10">
+                                <span>COHORT DECAY (D0 → D30)</span>
+                                <span class="text-error">-69% CHURN</span>
+                            </div>
+                            <div class="w-full h-24 mt-2">
+                                <svg class="w-full h-full" viewBox="0 0 200 80" preserveAspectRatio="none">
+                                    <path d="M0,10 C20,10 40,70 200,75" fill="none" stroke="#ffb4ab" stroke-width="2"/>
+                                    <path d="M0,10 C20,10 40,70 200,75 L200,80 L0,80 Z" fill="rgba(255,180,171,0.15)"/>
+                                    <circle cx="0" cy="10" r="3" fill="#ffb4ab"/>
+                                    <circle cx="200" cy="75" r="3" fill="#ffb4ab"/>
+                                </svg>
+                            </div>
+                            <div class="flex justify-between text-[8px] font-label-caps text-outline">
+                                <span>DAY 0: 100%</span>
+                                <span>DAY 30: 31%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SLIDE 06: THE MONEY ENGINE                                            -->
+        <!-- --------------------------------------------------------------------- -->
+        <section class="slide px-6 md:px-container-padding" id="slide-5">
+            <div class="w-full max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto">
+                <!-- Left: Headline & Unit Economics -->
+                <div class="lg:col-span-8 flex flex-col gap-6">
+                    <div>
+                        <div class="font-label-caps text-xs text-error mb-2 uppercase flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+                            SCREEN 06 — THE MONEY ENGINE
+                        </div>
+                        <h2 class="font-headline-xl text-3xl sm:text-4xl md:text-5xl text-white font-bold leading-tight">
+                            Revenue was growing.<br/>
+                            The company was still dying.
+                        </h2>
+                    </div>
+
+                    <!-- Critical Warning Panel -->
+                    <div class="glass-panel p-6 rounded-lg border border-error/50 bg-error/[0.03] flex flex-col items-center text-center relative overflow-hidden">
+                        <div class="absolute top-3 left-4 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+                            <span class="font-label-caps text-[10px] text-error font-bold">FATAL FORMULA</span>
+                        </div>
+                        <div class="font-metric-xl text-4xl sm:text-6xl font-bold text-error tracking-tight my-4">
+                            LTV &lt; CAC
+                        </div>
+                        <p class="font-body-sm text-xs text-outline max-w-lg">
+                            Every single customer acquired resulted in a net capital loss of ₹1,600. Scaling sales merely accelerated the countdown to bankruptcy.
+                        </p>
+                    </div>
+
+                    <!-- 2 Cards: CAC vs LTV -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- CAC Card -->
+                        <div class="glass-panel p-5 rounded-lg flex flex-col justify-between">
+                            <span class="font-label-caps text-[10px] text-outline">CAC (CUSTOMER ACQUISITION COST)</span>
+                            <div class="my-2">
+                                <span class="font-metric-xl text-3xl md:text-4xl font-bold text-white">₹4,800</span>
+                                <span class="text-error text-xs font-label-caps block mt-1">▲ RISING EXPONENTIALLY</span>
+                            </div>
+                            <div class="w-full h-10 mt-2">
+                                <svg class="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                    <polyline fill="none" points="0,28 20,25 40,20 60,14 80,8 100,2" stroke="#ffb4ab" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- LTV Card -->
+                        <div class="glass-panel p-5 rounded-lg flex flex-col justify-between">
+                            <span class="font-label-caps text-[10px] text-outline">LTV (LIFETIME VALUE)</span>
+                            <div class="my-2">
+                                <span class="font-metric-xl text-3xl md:text-4xl font-bold text-outline">₹3,200</span>
+                                <span class="text-outline text-xs font-label-caps block mt-1">▼ DECAYING DUE TO CHURN</span>
+                            </div>
+                            <div class="w-full h-10 mt-2">
+                                <svg class="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                    <polyline fill="none" points="0,5 20,8 40,14 60,18 80,24 100,28" stroke="#988e90" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Runway Countdown & Burn Rate Console -->
+                <div class="lg:col-span-4 flex flex-col gap-6">
+                    <!-- Dynamic Runway Gauge -->
+                    <div class="glass-panel p-6 rounded-lg flex flex-col items-center justify-center border border-white/10 relative overflow-hidden">
+                        <span class="font-label-caps text-xs text-outline mb-4">SURVIVAL RUNWAY (MONTHS)</span>
+                        <div class="relative w-44 h-44 flex items-center justify-center">
+                            <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3"/>
+                                <circle cx="50" cy="50" r="44" fill="none" id="runway-gauge-circle" stroke="#ffb4ab" stroke-width="3" stroke-dasharray="276" stroke-dashoffset="180" stroke-linecap="round" class="transition-all duration-700"/>
+                            </svg>
+                            <div class="flex flex-col items-center">
+                                <span class="font-display-lg text-5xl font-bold text-error tracking-tighter" id="runway-gauge-num">2.4</span>
+                                <span class="font-label-caps text-[9px] text-outline">MONTHS LEFT</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button onclick="cycleRunwaySpeed(12)" class="px-2 py-1 glass-panel text-[9px] font-label-caps text-outline hover:text-white rounded">12M</button>
+                            <button onclick="cycleRunwaySpeed(6)" class="px-2 py-1 glass-panel text-[9px] font-label-caps text-outline hover:text-white rounded">6M</button>
+                            <button onclick="cycleRunwaySpeed(2.4)" class="px-2 py-1 glass-panel text-[9px] font-label-caps text-error border-error/50 rounded">2.4M</button>
+                            <button onclick="cycleRunwaySpeed(0)" class="px-2 py-1 glass-panel text-[9px] font-label-caps text-error hover:bg-error hover:text-black rounded">0M</button>
+                        </div>
+                    </div>
+
+                    <!-- Cash Flow Terminal Log -->
+                    <div class="glass-panel rounded-lg overflow-hidden border border-white/10">
+                        <div class="bg-surface-container-lowest px-4 py-2 border-b border-white/10 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-xs text-outline">terminal</span>
+                            <span class="font-label-caps text-[10px] text-outline">CASH_FLOW.LOG</span>
+                        </div>
+                        <div class="p-4 font-body-sm text-xs space-y-2 text-outline">
+                            <div class="flex justify-between border-b border-white/5 pb-1">
+                                <span>MONTHLY BURN RATE</span>
+                                <span class="text-error font-bold">₹18,00,000</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-1">
+                                <span>MONTHLY RECURRING (MRR)</span>
+                                <span class="text-white font-bold">₹11,00,000</span>
+                            </div>
+                            <div class="flex justify-between text-error font-bold">
+                                <span>MONTHLY DEFICIT</span>
+                                <span>-₹7,00,000</span>
+                            </div>
+                            <div class="pt-2 text-[10px] text-outline-variant flex items-center">
+                                &gt; EMERGENCY CAPITAL CALL: REJECTED_<span class="cursor-blink"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SLIDE 07: THE FAILURE MAP (RADIAL VIEW)                               -->
+        <!-- --------------------------------------------------------------------- -->
+        <section class="slide px-6 md:px-container-padding" id="slide-6">
+            <div class="w-full max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center my-auto">
+                <!-- Left: Kinetic Typewriter Statement -->
+                <div class="lg:col-span-5 flex flex-col justify-center gap-6">
+                    <div class="inline-flex items-center gap-2 font-label-caps text-xs text-error">
+                        <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+                        RADIAL FAILURE CLUSTER // ANATOMY
+                    </div>
+                    <h2 class="font-headline-xl text-2xl sm:text-3xl md:text-4xl text-white font-bold leading-tight" id="typewriter-slide7">
+                        Most startups don't die because the product is bad... <span class="text-error">They die because something ELSE breaks first.</span>
+                    </h2>
+                    <p class="font-body-lg text-sm text-on-surface-variant leading-relaxed">
+                        A startup is a linked chain of interdependent survival nodes. Failure in any single operational vector propagates catastrophic collapse throughout the entire system.
+                    </p>
+                    <div class="glass-panel p-4 rounded border border-white/10 text-xs font-body-sm text-outline flex items-center gap-3">
+                        <span class="material-symbols-outlined text-tertiary">info</span>
+                        <span>Hover or tap any orbital sector to isolate specific failure loads.</span>
+                    </div>
+                </div>
+
+                <!-- Right: Radial Interactive Map with 6 Nodes -->
+                <div class="lg:col-span-7 h-[460px] sm:h-[540px] relative flex items-center justify-center">
+                    <div class="relative w-[340px] sm:w-[480px] h-[340px] sm:h-[480px] flex items-center justify-center">
+                        <!-- Central Core Glow -->
+                        <div class="w-32 h-32 rounded-full glass-panel border border-error flex flex-col items-center justify-center text-center pulse-error z-30 shadow-[0_0_50px_rgba(255,180,171,0.2)]">
+                            <span class="material-symbols-outlined text-error text-3xl mb-1">warning</span>
+                            <span class="font-label-caps text-[10px] text-error font-bold leading-tight">STARTUP<br/>FAILURE</span>
+                        </div>
+
+                        <!-- Radial Sector 1: BAD DISTRIBUTION (92) -->
+                        <div class="radial-line hidden sm:block" style="--angle: -90deg; --radius: 190px;"></div>
+                        <div class="radial-node z-20" style="--angle: -90deg; --radius: 190px;">
+                            <div class="glass-panel p-2.5 sm:p-3.5 rounded border border-error/60 bg-black/80 hover:bg-black w-40 sm:w-48 shadow-lg transition-transform hover:scale-105">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-label-caps text-[9px] text-outline truncate">DISTRIBUTION</span>
+                                    <span class="font-metric-xl text-base sm:text-lg text-error font-bold">92%</span>
+                                </div>
+                                <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-error w-[92%]"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Radial Sector 2: POOR RETENTION (85) -->
+                        <div class="radial-line hidden sm:block" style="--angle: -30deg; --radius: 180px;"></div>
+                        <div class="radial-node z-20" style="--angle: -30deg; --radius: 180px;">
+                            <div class="glass-panel p-2.5 sm:p-3.5 rounded border border-tertiary/60 bg-black/80 hover:bg-black w-40 sm:w-48 shadow-lg transition-transform hover:scale-105">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-label-caps text-[9px] text-outline truncate">RETENTION</span>
+                                    <span class="font-metric-xl text-base sm:text-lg text-tertiary font-bold">85%</span>
+                                </div>
+                                <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-tertiary w-[85%]"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Radial Sector 3: BROKEN UNIT ECONOMICS (78) -->
+                        <div class="radial-line hidden sm:block" style="--angle: 30deg; --radius: 190px;"></div>
+                        <div class="radial-node z-20" style="--angle: 30deg; --radius: 190px;">
+                            <div class="glass-panel p-2.5 sm:p-3.5 rounded border border-white/20 bg-black/80 hover:bg-black w-40 sm:w-48 shadow-lg transition-transform hover:scale-105">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-label-caps text-[9px] text-outline truncate">UNIT ECONOMICS</span>
+                                    <span class="font-metric-xl text-base sm:text-lg text-white font-bold">78%</span>
+                                </div>
+                                <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-primary w-[78%]"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Radial Sector 4: PREMATURE SCALING (88) -->
+                        <div class="radial-line hidden sm:block" style="--angle: 90deg; --radius: 180px;"></div>
+                        <div class="radial-node z-20" style="--angle: 90deg; --radius: 180px;">
+                            <div class="glass-panel p-2.5 sm:p-3.5 rounded border border-error/60 bg-black/80 hover:bg-black w-40 sm:w-48 shadow-lg transition-transform hover:scale-105">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-label-caps text-[9px] text-outline truncate">PREMATURE SCALING</span>
+                                    <span class="font-metric-xl text-base sm:text-lg text-error font-bold">88%</span>
+                                </div>
+                                <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-error w-[88%]"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Radial Sector 5: TEAM FRICTION (65) -->
+                        <div class="radial-line hidden sm:block" style="--angle: 150deg; --radius: 190px;"></div>
+                        <div class="radial-node z-20" style="--angle: 150deg; --radius: 190px;">
+                            <div class="glass-panel p-2.5 sm:p-3.5 rounded border border-white/20 bg-black/80 hover:bg-black w-40 sm:w-48 shadow-lg transition-transform hover:scale-105">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-label-caps text-[9px] text-outline truncate">TEAM CONFLICT</span>
+                                    <span class="font-metric-xl text-base sm:text-lg text-outline font-bold">65%</span>
+                                </div>
+                                <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-outline w-[65%]"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Radial Sector 6: MARKET TIMING (70) -->
+                        <div class="radial-line hidden sm:block" style="--angle: 210deg; --radius: 180px;"></div>
+                        <div class="radial-node z-20" style="--angle: 210deg; --radius: 180px;">
+                            <div class="glass-panel p-2.5 sm:p-3.5 rounded border border-white/20 bg-black/80 hover:bg-black w-40 sm:w-48 shadow-lg transition-transform hover:scale-105">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-label-caps text-[9px] text-outline truncate">MARKET TIMING</span>
+                                    <span class="font-metric-xl text-base sm:text-lg text-white font-bold">70%</span>
+                                </div>
+                                <div class="h-1 bg-white/10 w-full rounded"><div class="h-full bg-primary w-[70%]"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- --------------------------------------------------------------------- -->
+        <!-- SLIDE 08: FINAL DIAGNOSIS (THE EQUATION OF SURVIVAL)                   -->
+        <!-- --------------------------------------------------------------------- -->
+        <section class="slide px-6 md:px-container-padding" id="slide-7">
+            <div class="w-full max-w-6xl mx-auto flex flex-col justify-center my-auto gap-8">
+                
+                <!-- Main Conclusion Headline -->
+                <div class="border-l-4 border-l-error pl-6 py-2">
+                    <span class="font-label-caps text-xs text-error block mb-1">FINAL AUTOPSY CONCLUSION</span>
+                    <h2 class="font-headline-xl text-2xl sm:text-4xl md:text-5xl text-white font-extrabold tracking-tight leading-tight">
+                        <span class="text-outline">The product wasn't the problem.</span><br/>
+                        The business around the product was.
+                    </h2>
+                </div>
+
+                <!-- Reality Check Matrix Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+                    <!-- Left: The Illusion Metrics -->
+                    <div class="md:col-span-5 glass-panel p-6 rounded-lg flex flex-col justify-between gap-4">
+                        <span class="font-label-caps text-xs text-outline uppercase">INITIALIZATION STATE (THE ILLUSION)</span>
+                        <div class="space-y-3 font-body-sm text-xs">
+                            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                                <span class="text-outline">PRODUCT CRAFT</span>
+                                <span class="font-metric-xl text-lg text-tertiary">94 / 100</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                                <span class="text-outline">CUSTOMER AFFINITY</span>
+                                <span class="font-metric-xl text-lg text-tertiary">91 / 100</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-outline">TECHNICAL ARCHITECTURE</span>
+                                <span class="font-metric-xl text-lg text-tertiary">96 / 100</span>
+                            </div>
+                        </div>
+                        <div class="text-[10px] font-label-caps text-tertiary">VERDICT: WORLD CLASS EXECUTION</div>
+                    </div>
+
+                    <!-- Right: The Commercial Reality -->
+                    <div class="md:col-span-7 glass-panel p-6 rounded-lg border border-error/40 bg-error/[0.03] flex flex-col justify-between gap-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-label-caps text-xs text-error uppercase flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+                                COMMERCIAL REALITY
+                            </span>
+                            <span class="font-label-caps text-xs text-error font-bold">SYSTEM HALTED</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <span class="font-label-caps text-[10px] text-outline">OVERALL BUSINESS HEALTH</span>
+                                <div class="font-metric-xl text-4xl font-bold text-error mt-1">07<span class="text-sm text-outline">/100</span></div>
+                                <div class="h-1 bg-white/10 w-full rounded mt-2"><div class="h-full bg-error w-[7%]"></div></div>
+                            </div>
+                            <div>
+                                <span class="font-label-caps text-[10px] text-outline">REMAINING RUNWAY</span>
+                                <div class="font-metric-xl text-4xl font-bold text-white mt-1">0 <span class="text-base text-outline">DAYS</span></div>
+                                <span class="text-error text-xs font-body-sm block mt-2">&gt; FAILED_</span>
+                            </div>
+                        </div>
+
+                        <div class="text-[10px] font-label-caps text-error border-t border-white/10 pt-3">
+                            FATAL FLAW: ZERO PROFITABLE ACQUISITION ENGINE + RETENTION DECAY
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Formula of Startup Survival (Dependency Chain) -->
+                <div class="glass-panel p-6 rounded-lg flex flex-col gap-4 border border-white/15">
+                    <span class="font-label-caps text-xs text-outline uppercase">THE COMPLETE STARTUP SURVIVAL EQUATION</span>
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-label-caps">
+                        <span class="px-3 py-1.5 rounded bg-white/10 text-white font-bold">PRODUCT (94)</span>
+                        <span class="text-outline font-bold">+</span>
+                        <span class="px-3 py-1.5 rounded bg-white/10 text-white font-bold">USER LOVE (91)</span>
+                        <span class="text-outline font-bold">+</span>
+                        <span class="px-3 py-1.5 rounded bg-error/20 text-error border border-error/40 font-bold">DISTRIBUTION ❌</span>
+                        <span class="text-outline font-bold">+</span>
+                        <span class="px-3 py-1.5 rounded bg-error/20 text-error border border-error/40 font-bold">UNIT ECONOMICS ❌</span>
+                        <span class="text-outline font-bold">+</span>
+                        <span class="px-3 py-1.5 rounded bg-white/10 text-white font-bold">TIMING</span>
+                        <span class="text-outline font-bold">=</span>
+                        <span class="px-4 py-1.5 rounded bg-error text-black font-extrabold">INSOLVENCY</span>
+                    </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="flex flex-wrap justify-between items-center gap-4 pt-2">
+                    <button onclick="goToSlide(0)" class="px-6 py-2.5 glass-panel hover:bg-white/10 text-white rounded font-label-caps text-xs flex items-center gap-2 transition-all">
+                        <span class="material-symbols-outlined text-sm">restart_alt</span>
+                        REBOOT DIAGNOSTIC SEQUENCE
+                    </button>
+                    <button onclick="toggleOverviewModal()" class="px-6 py-2.5 bg-white hover:bg-tertiary text-black font-bold rounded font-label-caps text-xs flex items-center gap-2 transition-all">
+                        <span class="material-symbols-outlined text-sm">grid_view</span>
+                        EXPLORE FULL SLIDE MATRIX
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- BOTTOM NAVIGATION DOCKED BAR                                              -->
+    <!-- ========================================================================= -->
+    <footer class="fixed bottom-0 left-0 w-full z-50 bg-black/70 backdrop-blur-xl border-t border-white/10 px-6 md:px-12 h-[72px] flex items-center justify-between">
+        
+        <!-- Prev Button -->
+        <button id="btn-prev" onclick="prevSlide()" class="flex items-center gap-2 px-4 py-2 glass-panel rounded hover:bg-white/10 text-outline hover:text-white transition-all font-label-caps text-xs disabled:opacity-30 disabled:pointer-events-none" title="Previous Slide (Key: ← or Backspace)">
+            <span class="material-symbols-outlined text-[16px]">arrow_back_ios</span>
+            <span class="hidden sm:inline">PREV</span>
+        </button>
+
+        <!-- Slide Indicator Pills / Dots -->
+        <div class="flex items-center gap-1.5 sm:gap-2">
+            <button onclick="goToSlide(0)" class="slide-dot w-6 sm:w-8 h-1.5 rounded-full bg-white transition-all" title="01: Boot Sequence"></button>
+            <button onclick="goToSlide(1)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all" title="02: The Perfect Product"></button>
+            <button onclick="goToSlide(2)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all" title="03: The Contradiction"></button>
+            <button onclick="goToSlide(3)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all" title="04: The Failure Stack"></button>
+            <button onclick="goToSlide(4)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all" title="05: The Leaky Funnel"></button>
+            <button onclick="goToSlide(5)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all" title="06: The Money Engine"></button>
+            <button onclick="goToSlide(6)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all" title="07: The Failure Map"></button>
+            <button onclick="goToSlide(7)" class="slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all" title="08: Final Diagnosis"></button>
+        </div>
+
+        <!-- Next Button -->
+        <button id="btn-next" onclick="nextSlide()" class="flex items-center gap-2 px-4 py-2 glass-panel border border-white/20 rounded hover:bg-white/10 text-white hover:text-tertiary transition-all font-label-caps text-xs disabled:opacity-30 disabled:pointer-events-none" title="Next Slide (Key: → or Space)">
+            <span class="hidden sm:inline">NEXT</span>
+            <span class="material-symbols-outlined text-[16px]">arrow_forward_ios</span>
+        </button>
+    </footer>
+
+    <!-- ========================================================================= -->
+    <!-- OVERVIEW MODAL (HUD MATRIX)                                               -->
+    <!-- ========================================================================= -->
+    <div id="overview-modal" class="hud-modal modal-closed fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl p-6 sm:p-12 flex flex-col justify-between overflow-y-auto">
+        <div class="flex justify-between items-center border-b border-white/10 pb-4">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-tertiary">grid_view</span>
+                <span class="font-display-lg text-xl font-bold text-white tracking-tight">PRESENTATION MATRIX // 8 SCENES</span>
+            </div>
+            <button onclick="toggleOverviewModal()" class="p-2 glass-panel rounded hover:bg-white/10 text-outline hover:text-white" title="Close Matrix (ESC)">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+        </div>
+
+        <!-- Matrix Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-8">
+            <!-- Card 0 -->
+            <div onclick="goToSlide(0); toggleOverviewModal();" class="glass-panel glass-panel-hover p-4 rounded-lg cursor-pointer border border-white/10 flex flex-col justify-between gap-3">
+                <div class="flex justify-between text-[10px] font-label-caps text-tertiary">
+                    <span>SCENE 01</span>
+                    <span>WATCH DOGS</span>
+                </div>
+                <h4 class="font-bold text-sm text-white">Why Startups Fail</h4>
+                <p class="text-xs text-outline font-body-sm line-clamp-2">Case study autopsy by Team Watch Dogs (Nandeesh, Gaurav, Nadeem, Nakul, Nandhini, Namrata).</p>
+                <div class="text-[10px] font-label-caps text-outline pt-2 border-t border-white/5">Product: 94% | 6 Investigators</div>
+            </div>
+
+            <!-- Card 1 -->
+            <div onclick="goToSlide(1); toggleOverviewModal();" class="glass-panel glass-panel-hover p-4 rounded-lg cursor-pointer border border-white/10 flex flex-col justify-between gap-3">
+                <div class="flex justify-between text-[10px] font-label-caps text-tertiary">
+                    <span>SCENE 02</span>
+                    <span>ILLUSION</span>
+                </div>
+                <h4 class="font-bold text-sm text-white">The Perfect Product</h4>
+                <p class="text-xs text-outline font-body-sm line-clamp-2">High user satisfaction, 4.8 star ratings, and glowing client quotes.</p>
+                <div class="text-[10px] font-label-caps text-outline pt-2 border-t border-white/5">NPS: +67 | Rating: 4.8/5</div>
+            </div>
+
+            <!-- Card 2 -->
+            <div onclick="goToSlide(2); toggleOverviewModal();" class="glass-panel glass-panel-hover p-4 rounded-lg cursor-pointer border border-white/10 flex flex-col justify-between gap-3">
+                <div class="flex justify-between text-[10px] font-label-caps text-error">
+                    <span>SCENE 03</span>
+                    <span>PARADOX</span>
+                </div>
+                <h4 class="font-bold text-sm text-white">The Contradiction</h4>
+                <p class="text-xs text-outline font-body-sm line-clamp-2">Great product usability vs catastrophic unit economics health.</p>
+                <div class="text-[10px] font-label-caps text-outline pt-2 border-t border-white/5">Business Health: 23/100</div>
+            </div>
+
+            <!-- Card 3 -->
+            <div onclick="goToSlide(3); toggleOverviewModal();" class="glass-panel glass-panel-hover p-4 rounded-lg cursor-pointer border border-white/10 flex flex-col justify-between gap-3">
+                <div class="flex justify-between text-[10px] font-label-caps text-error">
+                    <span>SCENE 04</span>
+                    <span>ANATOMY</span>
+                </div>
+                <h4 class="font-bold text-sm text-white">The Failure Stack</h4>
+                <p class="text-xs text-outline font-body-sm line-clamp-2">Interactive satellite radar mapping distribution, retention & burn failure.</p>
+                <div class="text-[10px] font-label-caps text-outline pt-2 border-t border-white/5">Distribution: 92% Severity</div>
+            </div>
+
+            <!-- Card 4 -->
+            <div onclick="goToSlide(4); toggleOverviewModal();" class="glass-panel glass-panel-hover p-4 rounded-lg cursor-pointer border border-white/10 flex flex-col justify-between gap-3">
+                <div class="flex justify-between text-[10px] font-label-caps text-error">
+                    <span>SCENE 05</span>
+                    <span>FUNNEL</span>
+                </div>
+                <h4 class="font-bold text-sm text-white">The Leaky Funnel</h4>
+                <p class="text-xs text-outline font-body-sm line-clamp-2">1,000,000 impressions collapsing to 620 retained users with 31% D30.</p>
+                <div class="text-[10px] font-label-caps text-outline pt-2 border-t border-white/5">D30 Retention: 31%</div>
+            </div>
+
+            <!-- Card 5 -->
+            <div onclick="goToSlide(5); toggleOverviewModal();" class="glass-panel glass-panel-hover p-4 rounded-lg cursor-pointer border border-white/10 flex flex-col justify-between gap-3">
+                <div class="flex justify-between text-[10px] font-label-caps text-error">
+                    <span>SCENE 06</span>
+                    <span>UNIT ECON</span>
+                </div>
+                <h4 class="font-bold text-sm text-white">The Money Engine</h4>
+                <p class="text-xs text-outline font-body-sm line-clamp-2">LTV &lt; CAC inverted formula leading to a 2.4 month countdown.</p>
+                <div class="text-[10px] font-label-caps text-outline pt-2 border-t border-white/5">Burn: -₹7,00,000/mo</div>
+            </div>
+
+            <!-- Card 6 -->
+            <div onclick="goToSlide(6); toggleOverviewModal();" class="glass-panel glass-panel-hover p-4 rounded-lg cursor-pointer border border-white/10 flex flex-col justify-between gap-3">
+                <div class="flex justify-between text-[10px] font-label-caps text-error">
+                    <span>SCENE 07</span>
+                    <span>RADIAL</span>
+                </div>
+                <h4 class="font-bold text-sm text-white">The Failure Map</h4>
+                <p class="text-xs text-outline font-body-sm line-clamp-2">Why something else breaks first: 6 systemic orbital vectors.</p>
+                <div class="text-[10px] font-label-caps text-outline pt-2 border-t border-white/5">Scaling: 88% | Timing: 70%</div>
+            </div>
+
+            <!-- Card 7 -->
+            <div onclick="goToSlide(7); toggleOverviewModal();" class="glass-panel glass-panel-hover p-4 rounded-lg cursor-pointer border border-white/10 flex flex-col justify-between gap-3">
+                <div class="flex justify-between text-[10px] font-label-caps text-tertiary">
+                    <span>SCENE 08</span>
+                    <span>CONCLUSION</span>
+                </div>
+                <h4 class="font-bold text-sm text-white">Final Diagnosis</h4>
+                <p class="text-xs text-outline font-body-sm line-clamp-2">The complete startup survival equation and forensic takeaway.</p>
+                <div class="text-[10px] font-label-caps text-outline pt-2 border-t border-white/5">Final Score: 07 / 100</div>
+            </div>
+        </div>
+
+        <div class="text-center font-label-caps text-xs text-outline">
+            Press <span class="border border-white/20 px-1.5 py-0.5 rounded text-white text-[10px]">1-8</span> on keyboard to jump directly to any slide
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- INTERACTIVE CLI TERMINAL DRAWER                                           -->
+    <!-- ========================================================================= -->
+    <div id="cli-drawer" class="hidden-drawer fixed bottom-0 left-0 w-full h-[320px] bg-black/95 border-t border-tertiary/40 backdrop-blur-2xl z-50 p-6 flex flex-col justify-between font-body-sm shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
+        <!-- Terminal Header -->
+        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+            <div class="flex items-center gap-2 text-tertiary text-xs font-label-caps">
+                <span class="material-symbols-outlined text-sm">terminal</span>
+                <span>DIAGNOSTIC CONSOLE // VELA OS v1.4</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] text-outline font-label-caps hidden sm:block">TYPE 'help' FOR COMMANDS</span>
+                <button onclick="toggleCliDrawer()" class="text-outline hover:text-white">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Terminal Output Area -->
+        <div id="cli-output" class="flex-1 my-3 overflow-y-auto font-body-sm text-xs space-y-1.5 text-outline">
+            <div class="text-tertiary">[SYSTEM READY] Diagnostic interface connected. Type commands below.</div>
+            <div>Target initialized: VELA CLOUD INC. (Post-Mortem Investigation)</div>
+        </div>
+
+        <!-- Terminal Input Line -->
+        <div class="flex items-center gap-2 border-t border-white/10 pt-2">
+            <span class="text-tertiary font-bold">&gt;</span>
+            <input type="text" id="cli-input" placeholder="Type a command (e.g. goto 3, diagnose, metrics, sound, help)..." class="flex-1 bg-transparent border-none outline-none text-white text-xs font-body-sm focus:ring-0 p-0" autocomplete="off" onkeydown="handleCliInput(event)"/>
+            <button onclick="executeCliCommand()" class="px-3 py-1 glass-panel text-[10px] font-label-caps text-tertiary rounded hover:bg-tertiary hover:text-black">RUN</button>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- CORE JAVASCRIPT LOGIC & AUDIO SYNTH                                       -->
+    <!-- ========================================================================= -->
+    <script>
+        // State Management
+        let currentSlide = 0;
+        const totalSlides = 8;
+        let isAutoplay = false;
+        let autoplayTimer = null;
+        let audioEnabled = true;
+
+        const slideTitles = [
+            "01 // BOOT SEQUENCE",
+            "02 // THE PERFECT PRODUCT",
+            "03 // THE CONTRADICTION",
+            "04 // THE FAILURE STACK",
+            "05 // THE LEAKY FUNNEL",
+            "06 // THE MONEY ENGINE",
+            "07 // THE FAILURE MAP",
+            "08 // FINAL DIAGNOSIS"
+        ];
+
+        // -------------------------------------------------------------------------
+        // Web Audio Synthesizer (Zero External Dependencies)
+        // -------------------------------------------------------------------------
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playBeep(type = 'click') {
+            if (!audioEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                const now = ctx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, now);
+                    osc.frequency.exponentialRampToValueAtTime(400, now + 0.04);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.04);
+                    osc.start(now);
+                    osc.stop(now + 0.04);
+                } else if (type === 'slide') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(280, now);
+                    osc.frequency.exponentialRampToValueAtTime(620, now + 0.09);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.09);
+                    osc.start(now);
+                    osc.stop(now + 0.09);
+                } else if (type === 'alert') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(330, now + 0.08);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.16);
+                    osc.start(now);
+                    osc.stop(now + 0.16);
+                } else if (type === 'command') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(1050, now);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.06);
+                    osc.start(now);
+                    osc.stop(now + 0.06);
+                }
+            } catch (e) {
+                // Audio gracefully disabled if unsupported
+            }
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const icon = document.getElementById('audio-icon');
+            if (audioEnabled) {
+                icon.innerText = 'volume_up';
+                icon.classList.remove('text-outline');
+                icon.classList.add('text-tertiary');
+                playBeep('click');
+            } else {
+                icon.innerText = 'volume_off';
+                icon.classList.remove('text-tertiary');
+                icon.classList.add('text-outline');
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Slide Navigation Logic
+        // -------------------------------------------------------------------------
+        function updateSlideUI() {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+
+            // Update Header Information
+            const badge = document.getElementById('header-slide-badge');
+            const name = document.getElementById('header-slide-name');
+            if (badge) badge.innerText = `SCENE 0${currentSlide + 1} / 08`;
+            if (name) name.innerText = slideTitles[currentSlide].split('// ')[1];
+
+            // Update Bottom Dots
+            const dots = document.querySelectorAll('.slide-dot');
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.className = "slide-dot w-6 sm:w-8 h-1.5 rounded-full bg-white transition-all";
+                } else {
+                    dot.className = "slide-dot w-2 sm:w-2.5 h-1.5 rounded-full bg-white/20 hover:bg-white/50 transition-all";
+                }
+            });
+
+            // Update Button Disabled States
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            if (btnPrev) btnPrev.disabled = (currentSlide === 0);
+            if (btnNext) btnNext.disabled = (currentSlide === totalSlides - 1);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides || index === currentSlide) return;
+            currentSlide = index;
+            playBeep('slide');
+            updateSlideUI();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                goToSlide(currentSlide + 1);
+            } else if (isAutoplay) {
+                goToSlide(0); // loop around in autoplay
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Autoplay Mode
+        // -------------------------------------------------------------------------
+        function toggleAutoplay() {
+            isAutoplay = !isAutoplay;
+            const icon = document.getElementById('autoplay-icon');
+            const label = document.getElementById('autoplay-label');
+
+            if (isAutoplay) {
+                icon.innerText = 'pause';
+                label.innerText = 'PLAYING';
+                label.classList.add('text-tertiary');
+                playBeep('command');
+                autoplayTimer = setInterval(() => {
+                    nextSlide();
+                }, 6000);
+            } else {
+                icon.innerText = 'play_arrow';
+                label.innerText = 'AUTO';
+                label.classList.remove('text-tertiary');
+                clearInterval(autoplayTimer);
+                playBeep('click');
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Fullscreen Toggle
+        // -------------------------------------------------------------------------
+        function toggleFullScreen() {
+            const icon = document.getElementById('fullscreen-icon');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {});
+                if (icon) icon.innerText = 'fullscreen_exit';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    if (icon) icon.innerText = 'fullscreen';
+                }
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Modals & Drawers
+        // -------------------------------------------------------------------------
+        function toggleOverviewModal() {
+            const modal = document.getElementById('overview-modal');
+            if (modal.classList.contains('modal-closed')) {
+                modal.classList.remove('modal-closed');
+                playBeep('command');
+            } else {
+                modal.classList.add('modal-closed');
+                playBeep('click');
+            }
+        }
+
+        function toggleCliDrawer() {
+            const drawer = document.getElementById('cli-drawer');
+            const input = document.getElementById('cli-input');
+            if (drawer.classList.contains('hidden-drawer')) {
+                drawer.classList.remove('hidden-drawer');
+                playBeep('command');
+                setTimeout(() => input.focus(), 150);
+            } else {
+                drawer.classList.add('hidden-drawer');
+                playBeep('click');
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Interactive Node Radar Selector on Slide 04
+        // -------------------------------------------------------------------------
+        const failureData = {
+            distribution: {
+                title: "DIAGNOSTIC: DISTRIBUTION",
+                severity: "92%",
+                statusColor: "bg-error",
+                label1: "PRODUCT QUALITY", val1: "EXCELLENT (94/100)",
+                label2: "CUSTOMER PIPELINE", val2: "CRITICALLY LOW",
+                label3: "ACQUISITION COST (CAC)", val3: "₹4,800",
+                label4: "ORGANIC INFLOW", val4: "8.0%",
+                rootCause: "Great product. Nobody knows it exists. Over-reliance on expensive paid acquisition channels resulted in unsustainably high CAC. Failure to establish organic distribution loops pre-launch."
+            },
+            retention: {
+                title: "DIAGNOSTIC: RETENTION COLLAPSE",
+                severity: "85%",
+                statusColor: "bg-error",
+                label1: "D30 RETENTION", val1: "31% (DEFICIT)",
+                label2: "MONTH 2 CHURN", val2: "69.0%",
+                label3: "NET HABIT STICKINESS", val3: "LOW",
+                label4: "DAILY ACTIVE / MONTHLY", val4: "12.4%",
+                rootCause: "Users loved the initial onboarding 'wow' factor, but lacked ongoing workflows or switching friction. As novelty faded, customer engagement evaporated."
+            },
+            economics: {
+                title: "DIAGNOSTIC: UNIT ECONOMICS",
+                severity: "88%",
+                statusColor: "bg-error",
+                label1: "LTV TO CAC RATIO", val1: "0.67x (INVERTED)",
+                label2: "NET LOSS PER USER", val2: "-₹1,600",
+                label3: "PAYBACK PERIOD", val3: "36+ MONTHS",
+                label4: "GROSS MARGIN", val4: "42.0%",
+                rootCause: "Severe underpricing paired with exorbitant customer acquisition costs. Scaling user volume multiplied net financial deficit instead of creating operating leverage."
+            },
+            cashflow: {
+                title: "DIAGNOSTIC: CASH BURN RATE",
+                severity: "94%",
+                statusColor: "bg-error",
+                label1: "MONTHLY BURN", val1: "₹18,00,000",
+                label2: "MONTHLY RECURRING (MRR)", val2: "₹11,00,000",
+                label3: "NET MONTHLY DEFICIT", val3: "-₹7,00,000",
+                label4: "RUNWAY REMAINING", val4: "2.4 MONTHS",
+                rootCause: "Aggressive headcount expansion and infrastructure fixed overheads prior to establishing sustainable repeatable unit margins."
+            },
+            timing: {
+                title: "DIAGNOSTIC: MARKET TIMING",
+                severity: "70%",
+                statusColor: "bg-primary",
+                label1: "MARKET READINESS", val1: "PREMATURE (45%)",
+                label2: "BUYER ADOPTION LAG", val2: "9.2 MONTHS",
+                label3: "ENTERPRISE INTEGRATION", val3: "HIGH COMPLEXITY",
+                label4: "COMPETITIVE SATURATION", val4: "MODERATE",
+                rootCause: "Shipped 18 months ahead of enterprise cloud telemetry readiness. High buyer education overhead increased sales cycle length from 14 days to 180 days."
+            },
+            product: {
+                title: "DIAGNOSTIC: PRODUCT HEALTH",
+                severity: "05%",
+                statusColor: "bg-tertiary",
+                label1: "USABILITY SCORE (SUS)", val1: "94 / 100",
+                label2: "CUSTOMER SENTIMENT", val2: "91% LOVE",
+                label3: "NPS BENCHMARK", val3: "+67 WORLD CLASS",
+                label4: "TECHNICAL DEBT", val4: "NEGLIGIBLE",
+                rootCause: "The product itself was an undisputed triumph of engineering and design. The company died solely from external commercial execution vectors."
+            }
+        };
+
+        function selectFailureNode(nodeKey) {
+            const data = failureData[nodeKey];
+            if (!data) return;
+
+            playBeep('alert');
+
+            // Update Panel Elements
+            document.getElementById('diag-panel-title').innerText = data.title;
+            document.getElementById('diag-severity-badge').innerText = `SEVERITY: ${data.severity}`;
+            document.getElementById('diag-severity-text').innerText = data.severity;
+            document.getElementById('diag-severity-bar').style.width = data.severity;
+            document.getElementById('diag-root-cause').innerText = data.rootCause;
+
+            document.getElementById('diag-label-1').innerText = data.label1;
+            document.getElementById('diag-val-1').innerText = data.val1;
+            document.getElementById('diag-label-2').innerText = data.label2;
+            document.getElementById('diag-val-2').innerText = data.val2;
+            document.getElementById('diag-label-3').innerText = data.label3;
+            document.getElementById('diag-val-3').innerText = data.val3;
+            document.getElementById('diag-label-4').innerText = data.label4;
+            document.getElementById('diag-val-4').innerText = data.val4;
+
+            const dot = document.getElementById('diag-status-dot');
+            dot.className = `w-2.5 h-2.5 rounded-full ${data.statusColor}`;
+
+            // Highlight button
+            document.querySelectorAll('.failure-node-btn').forEach(btn => {
+                btn.classList.remove('border-error', 'border-tertiary', 'shadow-[0_0_20px_rgba(255,180,171,0.3)]', 'bg-error/10');
+            });
+        }
+
+        // -------------------------------------------------------------------------
+        // Slide 05 Retention Simulator
+        // -------------------------------------------------------------------------
+        function updateRetentionSimulation(val) {
+            const liftPercent = parseInt(val, 10);
+            document.getElementById('retention-slider-val').innerText = `+${liftPercent}%`;
+            
+            // Base: 620 users from 2,000 paid at 31% retention
+            const basePaid = 2000;
+            const newRetention = 0.31 + (liftPercent / 100 * 0.5);
+            const calculatedStay = Math.round(basePaid * newRetention);
+
+            const stayLabel = document.getElementById('funnel-stay-count');
+            const projectedLabel = document.getElementById('retention-projected-val');
+
+            if (liftPercent === 0) {
+                stayLabel.innerText = "620 (0.062%)";
+                stayLabel.className = "font-label-caps text-error font-bold px-2 py-0.5 bg-error/20 rounded border border-error/30";
+                projectedLabel.innerText = "Projected: 620 (Dead)";
+                projectedLabel.className = "text-error font-bold";
+            } else {
+                stayLabel.innerText = `${calculatedStay} (${(calculatedStay/10000).toFixed(3)}%)`;
+                stayLabel.className = "font-label-caps text-tertiary font-bold px-2 py-0.5 bg-tertiary/20 rounded border border-tertiary/30";
+                projectedLabel.innerText = `Projected: ${calculatedStay} Users (+${calculatedStay - 620} Saved)`;
+                projectedLabel.className = "text-tertiary font-bold";
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Slide 06 Runway Speed Selector
+        // -------------------------------------------------------------------------
+        function cycleRunwaySpeed(months) {
+            playBeep('click');
+            const text = document.getElementById('runway-gauge-num');
+            const circle = document.getElementById('runway-gauge-circle');
+            text.innerText = months;
+
+            // Gauge circumference = 2 * PI * 44 ≈ 276.46
+            const totalDash = 276;
+            const percentage = months / 12;
+            const offset = totalDash - (totalDash * percentage);
+            circle.style.strokeDashoffset = offset;
+
+            if (months === 0) {
+                text.classList.add('animate-ping');
+                setTimeout(() => text.classList.remove('animate-ping'), 500);
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // CLI Command Processor
+        // -------------------------------------------------------------------------
+        function handleCliInput(e) {
+            if (e.key === 'Enter') {
+                executeCliCommand();
+            }
+        }
+
+        function executeCliCommand() {
+            const input = document.getElementById('cli-input');
+            const output = document.getElementById('cli-output');
+            const cmd = input.value.trim().toLowerCase();
+            if (!cmd) return;
+
+            playBeep('command');
+
+            // Log Command
+            const line = document.createElement('div');
+            line.innerHTML = `<span class="text-white font-bold">&gt; ${input.value}</span>`;
+            output.appendChild(line);
+
+            input.value = '';
+
+            const response = document.createElement('div');
+
+            // Parse Commands
+            if (cmd === 'help') {
+                response.innerHTML = `
+                    <div class="text-tertiary font-bold">AVAILABLE DIAGNOSTIC COMMANDS:</div>
+                    <div class="ml-2 text-on-surface-variant">
+                        • <span class="text-white">goto &lt;1-8&gt;</span> : Jump directly to slide<br/>
+                        • <span class="text-white">diagnose</span> : Print root-cause summary autopsy<br/>
+                        • <span class="text-white">metrics</span> : List core performance numbers<br/>
+                        • <span class="text-white">audio on|off</span> : Toggle retro audio synth<br/>
+                        • <span class="text-white">autoplay</span> : Toggle auto-play mode<br/>
+                        • <span class="text-white">team</span> : View Watch Dogs investigation squad<br/>
+                        • <span class="text-white">matrix</span> : Open slide grid overview<br/>
+                        • <span class="text-white">clear</span> : Clear console window<br/>
+                        • <span class="text-white">reboot</span> : Reset to Scene 01
+                    </div>
+                `;
+            } else if (cmd.startsWith('goto ') || cmd.startsWith('slide ')) {
+                const target = parseInt(cmd.split(' ')[1], 10);
+                if (target >= 1 && target <= 8) {
+                    goToSlide(target - 1);
+                    response.innerHTML = `<span class="text-tertiary">[OK] Navigated to Scene 0${target}.</span>`;
+                } else {
+                    response.innerHTML = `<span class="text-error">[ERR] Invalid slide number. Range: 1-8.</span>`;
+                }
+            } else if (cmd === 'diagnose') {
+                response.innerHTML = `
+                    <div class="text-error font-bold">[AUTOPSY REPORT] VELA CLOUD INC.</div>
+                    <div class="text-on-surface text-[11px]">
+                        • Product Usability: 94/100 (Optimal)<br/>
+                        • Customer Acquisition Cost: ₹4,800 vs LTV: ₹3,200<br/>
+                        • Monthly Cash Burn: -₹7,00,000 / mo deficit<br/>
+                        • Fatal Cause: Distribution deficit & inverted unit economics.
+                    </div>
+                `;
+            } else if (cmd === 'metrics') {
+                response.innerHTML = `<span class="text-tertiary">Product: 94 | NPS: +67 | D30 Retention: 31% | Deficit: ₹7L/mo</span>`;
+            } else if (cmd === 'audio on') {
+                audioEnabled = true;
+                document.getElementById('audio-icon').innerText = 'volume_up';
+                response.innerHTML = `<span class="text-tertiary">Audio Synthesizer: ACTIVE</span>`;
+            } else if (cmd === 'audio off') {
+                audioEnabled = false;
+                document.getElementById('audio-icon').innerText = 'volume_off';
+                response.innerHTML = `<span class="text-outline">Audio Synthesizer: MUTED</span>`;
+            } else if (cmd === 'autoplay') {
+                toggleAutoplay();
+                response.innerHTML = `<span class="text-tertiary">Autoplay toggled.</span>`;
+            } else if (cmd === 'matrix') {
+                toggleOverviewModal();
+                response.innerHTML = `<span class="text-tertiary">Opened matrix overview.</span>`;
+            } else if (cmd === 'clear') {
+                output.innerHTML = '';
+                return;
+            } else if (cmd === 'team' || cmd === 'members' || cmd === 'investigators') {
+                response.innerHTML = `
+                    <div class="text-tertiary font-bold">[TEAM ROSTER] WATCH DOGS</div>
+                    <div class="text-white text-[11px] grid grid-cols-2 gap-1 mt-1">
+                        <div>• 01: Nandeesh (Lead / Audit)</div>
+                        <div>• 02: Gaurav (Analyst)</div>
+                        <div>• 03: Nadeem (Strategy)</div>
+                        <div>• 04: Nakul (Economics)</div>
+                        <div>• 05: Nandhini (Research)</div>
+                        <div>• 06: Namrata (Forensics)</div>
+                    </div>
+                `;
+            } else if (cmd === 'reboot' || cmd === 'restart') {
+                goToSlide(0);
+                response.innerHTML = `<span class="text-tertiary">Rebooting boot sequence...</span>`;
+            } else {
+                response.innerHTML = `<span class="text-error">Unknown command: '${cmd}'. Type 'help' for instructions.</span>`;
+            }
+
+            output.appendChild(response);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // -------------------------------------------------------------------------
+        // Keyboard & Touch Shortcuts
+        // -------------------------------------------------------------------------
+        window.addEventListener('keydown', (e) => {
+            // Ignore shortcut keys when typing inside the CLI drawer
+            const cliInput = document.getElementById('cli-input');
+            if (document.activeElement === cliInput) {
+                if (e.key === 'Escape') {
+                    toggleCliDrawer();
+                }
+                return;
+            }
+
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'Backspace') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key >= '1' && e.key <= '8') {
+                goToSlide(parseInt(e.key, 10) - 1);
+            } else if (e.key === 'o' || e.key === 'O') {
+                toggleOverviewModal();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullScreen();
+            } else if (e.key === 'm' || e.key === 'M') {
+                toggleAudio();
+            } else if (e.key === 'a' || e.key === 'A') {
+                toggleAutoplay();
+            } else if (e.key === '`' || e.key === '~') {
+                e.preventDefault();
+                toggleCliDrawer();
+            } else if (e.key === 'Escape') {
+                const modal = document.getElementById('overview-modal');
+                if (!modal.classList.contains('modal-closed')) {
+                    toggleOverviewModal();
+                }
+                const drawer = document.getElementById('cli-drawer');
+                if (!drawer.classList.contains('hidden-drawer')) {
+                    toggleCliDrawer();
+                }
+            }
+        });
+
+        // Touch Swipe Gestures for Tablets and Mobile Devices
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        window.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const threshold = 50;
+            if (touchEndX < touchStartX - threshold) {
+                nextSlide(); // Swipe Left -> Next
+            } else if (touchEndX > touchStartX + threshold) {
+                prevSlide(); // Swipe Right -> Prev
+            }
+        }
+
+        // Initialize UI on DOM Load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSlideUI();
+        });
+    </script>
+</body>
+</html>
